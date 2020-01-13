@@ -34,6 +34,8 @@ const Tooltip = ({
             ...style,
             position: 'absolute',
             zIndex: styleZIndex,
+            top: 0,
+            left: 0,
             ...(coords ? {} : { opacity: 0 }),
             ...coords
         }),
