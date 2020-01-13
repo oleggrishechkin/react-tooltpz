@@ -12,3 +12,4 @@ export { default as useMethod } from './useMethod';
 export { default as useOutsideClick } from './useOutsideClick';
 export { default as useRecursiveAnimationFrame } from './useRecursiveAnimationFrame';
 export { default as useTooltip } from './useTooltip';
+export { default as ZIndexContext } from './ZIndexContext';

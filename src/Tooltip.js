@@ -1,13 +1,15 @@
 /* eslint-disable react/prop-types */
-import React, { useMemo, Fragment } from 'react';
+import React, { useMemo, useContext } from 'react';
 import ReactDOM from 'react-dom';
 import useTooltip from './useTooltip';
 import useInnerRef from './useInnerRef';
 import { POSITIONS, ALIGNS } from './constants';
+import ZIndexContext from './ZIndexContext';
 
 const Tooltip = ({
     innerRef = null,
     parentRef = null,
+    zIndex = 0,
     margin = 4,
     position = POSITIONS[0],
     align = ALIGNS[0],
@@ -25,18 +27,21 @@ const Tooltip = ({
         positions,
         aligns
     });
+    const contextZIndex = useContext(ZIndexContext);
+    const styleZIndex = (zIndex || 0) + (contextZIndex || 0);
     const extraStyle = useMemo(
         () => ({
             ...style,
             position: 'absolute',
+            zIndex: styleZIndex,
             ...(coords ? {} : { opacity: 0 }),
             ...coords
         }),
-        [coords, style]
+        [coords, style, styleZIndex]
     );
 
     return (
-        <Fragment>
+        <ZIndexContext.Provider value={styleZIndex + 1}>
             {ReactDOM.createPortal(
                 !!children &&
                     children({
@@ -48,7 +53,7 @@ const Tooltip = ({
                     }),
                 document.body
             )}
-        </Fragment>
+        </ZIndexContext.Provider>
     );
 };
 
