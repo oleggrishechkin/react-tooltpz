@@ -16,15 +16,15 @@ export default ({ parentRef, parentProps, tooltipProps }) => {
         }
 
         setOpened(false);
-    });
+    }, tooltipProps);
 
     return [
         { onClick },
         {
             opened,
             setOpened,
-            onMouseDown: decorateHandler('onMouseDown', tooltipProps, onMouseDown),
-            onTouchStart: decorateHandler('onTouchStart', tooltipProps, onTouchStart)
+            onMouseDown,
+            onTouchStart
         }
     ];
 };

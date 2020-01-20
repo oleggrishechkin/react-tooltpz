@@ -19,9 +19,8 @@ export default (onOutsideClick, handlers) => {
         }, 0);
     };
 
-    useEvent(document, 'mousedown', onDocumentMouseDown);
-
-    useEvent(document, 'touchstart', onDocumentMouseDown);
+    useEvent(window, 'mousedown', onDocumentMouseDown);
+    useEvent(window, 'touchstart', onDocumentMouseDown);
 
     return {
         onMouseDown: useMethod(
