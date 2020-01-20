@@ -16,7 +16,7 @@ const computeCoords = (
                 case 'center':
                     return {
                         top: bottom + margin,
-                        left: left + width / 2 - tooltipWidth / 2
+                        left: left + Math.round(width / 2) - Math.round(tooltipWidth / 2)
                     };
                 case 'end':
                     return {
@@ -37,7 +37,7 @@ const computeCoords = (
                 case 'center':
                     return {
                         top: top - margin - tooltipHeight,
-                        left: left + width / 2 - tooltipWidth / 2
+                        left: left + Math.round(width / 2) - Math.round(tooltipWidth / 2)
                     };
                 case 'end':
                     return {
@@ -57,7 +57,7 @@ const computeCoords = (
                     };
                 case 'center':
                     return {
-                        top: top + height / 2 - tooltipHeight / 2,
+                        top: top + Math.round(height / 2) - Math.round(tooltipHeight / 2),
                         left: right + margin
                     };
                 case 'end':
@@ -78,7 +78,7 @@ const computeCoords = (
                     };
                 case 'center':
                     return {
-                        top: top + height / 2 - tooltipHeight / 2,
+                        top: top + Math.round(height / 2) - Math.round(tooltipHeight / 2),
                         left: left - margin - tooltipWidth
                     };
                 case 'end':

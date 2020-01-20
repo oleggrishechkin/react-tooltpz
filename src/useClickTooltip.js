@@ -3,7 +3,7 @@ import useMethod from './useMethod';
 import useOutsideClick from './useOutsideClick';
 import decorateHandler from './decorateHandler';
 
-export default ({ parentRef, parentProps }) => {
+export default ({ parentRef, parentProps, tooltipProps }) => {
     const [opened, setOpened] = useState(false);
     const onClick = useMethod(
         decorateHandler('onClick', parentProps, () => {
@@ -18,5 +18,13 @@ export default ({ parentRef, parentProps }) => {
         setOpened(false);
     });
 
-    return [{ onClick }, { opened, setOpened, onMouseDown, onTouchStart }];
+    return [
+        { onClick },
+        {
+            opened,
+            setOpened,
+            onMouseDown: decorateHandler('onMouseDown', tooltipProps, onMouseDown),
+            onTouchStart: decorateHandler('onTouchStart', tooltipProps, onTouchStart)
+        }
+    ];
 };

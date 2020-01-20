@@ -15,7 +15,8 @@ const TooltipParent = ({ innerRef = null, tooltips, children = null, ...rest }) 
             parentRef,
             tooltipRef,
             parentProps,
-            tooltipsProps
+            tooltipsProps,
+            tooltipProps: (!!children && !!children[index + 1] && children[index + 1].props) || {}
         });
 
         tooltipRefs[index] = tooltipRef;
