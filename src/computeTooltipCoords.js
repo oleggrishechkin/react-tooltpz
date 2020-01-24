@@ -112,7 +112,7 @@ export default (parentNormalizedRect, tooltipSize, { margin, position, align, po
     let positionIndex = (initPositionIndex + 1) % POSITIONS.length;
     let alignIndex = (initPositionIndex + 1) % ALIGNS.length;
 
-    while (positionIndex !== initPositionIndex && alignIndex !== initAlignIndex) {
+    while (positionIndex !== initPositionIndex || alignIndex !== initAlignIndex) {
         if (
             (!positions || positions.includes(POSITIONS[positionIndex])) &&
             (!aligns || aligns.includes(ALIGNS[positionIndex]))
