@@ -1,6 +1,4 @@
-import { POSITIONS, ALIGNS } from './constants';
-
-const computeCoords = (
+const computePositionCoords = (
     { top, right, bottom, left, width, height },
     { width: tooltipWidth, height: tooltipHeight },
     { margin, position, align }
@@ -11,17 +9,23 @@ const computeCoords = (
                 case 'start':
                     return {
                         top: bottom + margin,
-                        left
+                        left: Math.min(Math.max(left, 0), document.documentElement.clientWidth - tooltipWidth)
                     };
                 case 'center':
                     return {
                         top: bottom + margin,
-                        left: left + Math.round(width / 2) - Math.round(tooltipWidth / 2)
+                        left: Math.min(
+                            Math.max(left + Math.round(width / 2) - Math.round(tooltipWidth / 2), 0),
+                            document.documentElement.clientWidth - tooltipWidth
+                        )
                     };
                 case 'end':
                     return {
                         top: bottom + margin,
-                        left: right - tooltipWidth
+                        left: Math.min(
+                            Math.max(right - tooltipWidth, 0),
+                            document.documentElement.clientWidth - tooltipWidth
+                        )
                     };
                 default:
                     return null;
@@ -32,17 +36,23 @@ const computeCoords = (
                 case 'start':
                     return {
                         top: top - margin - tooltipHeight,
-                        left
+                        left: Math.min(Math.max(left, 0), document.documentElement.clientWidth - tooltipWidth)
                     };
                 case 'center':
                     return {
                         top: top - margin - tooltipHeight,
-                        left: left + Math.round(width / 2) - Math.round(tooltipWidth / 2)
+                        left: Math.min(
+                            Math.max(left + Math.round(width / 2) - Math.round(tooltipWidth / 2), 0),
+                            document.documentElement.clientWidth - tooltipWidth
+                        )
                     };
                 case 'end':
                     return {
                         top: top - margin - tooltipHeight,
-                        left: right - tooltipWidth
+                        left: Math.min(
+                            Math.max(right - tooltipWidth, 0),
+                            document.documentElement.clientWidth - tooltipWidth
+                        )
                     };
                 default:
                     return null;
@@ -52,17 +62,23 @@ const computeCoords = (
             switch (align) {
                 case 'start':
                     return {
-                        top,
+                        top: Math.min(Math.max(top, 0), document.documentElement.clientHeight - tooltipHeight),
                         left: right + margin
                     };
                 case 'center':
                     return {
-                        top: top + Math.round(height / 2) - Math.round(tooltipHeight / 2),
+                        top: Math.min(
+                            Math.max(top + Math.round(height / 2) - Math.round(tooltipHeight / 2), 0),
+                            document.documentElement.clientHeight - tooltipHeight
+                        ),
                         left: right + margin
                     };
                 case 'end':
                     return {
-                        top: bottom - tooltipHeight,
+                        top: Math.min(
+                            Math.max(bottom - tooltipHeight, 0),
+                            document.documentElement.clientHeight - tooltipHeight
+                        ),
                         left: right + margin
                     };
                 default:
@@ -73,17 +89,23 @@ const computeCoords = (
             switch (align) {
                 case 'start':
                     return {
-                        top,
+                        top: Math.min(Math.max(top, 0), document.documentElement.clientHeight - tooltipHeight),
                         left: left - margin - tooltipWidth
                     };
                 case 'center':
                     return {
-                        top: top + Math.round(height / 2) - Math.round(tooltipHeight / 2),
+                        top: Math.min(
+                            Math.max(top + Math.round(height / 2) - Math.round(tooltipHeight / 2), 0),
+                            document.documentElement.clientHeight - tooltipHeight
+                        ),
                         left: left - margin - tooltipWidth
                     };
                 case 'end':
                     return {
-                        top: bottom - tooltipHeight,
+                        top: Math.min(
+                            Math.max(bottom - tooltipHeight, 0),
+                            document.documentElement.clientHeight - tooltipHeight
+                        ),
                         left: left - margin - tooltipWidth
                     };
                 default:
@@ -95,50 +117,124 @@ const computeCoords = (
     }
 };
 
-export default (parentNormalizedRect, tooltipSize, { margin, position, align, positions, aligns }) => {
-    const initCoords = computeCoords(parentNormalizedRect, tooltipSize, { margin, position, align });
-
-    if (
-        initCoords.top >= 0 &&
-        initCoords.left >= 0 &&
-        initCoords.top + tooltipSize.height <= document.documentElement.clientHeight &&
-        initCoords.left + tooltipSize.width <= document.documentElement.clientWidth
-    ) {
-        return initCoords;
-    }
-
-    const initPositionIndex = POSITIONS.indexOf(position);
-    const initAlignIndex = ALIGNS.indexOf(align);
-    let positionIndex = (initPositionIndex + 1) % POSITIONS.length;
-    let alignIndex = (initPositionIndex + 1) % ALIGNS.length;
-
-    while (positionIndex !== initPositionIndex || alignIndex !== initAlignIndex) {
-        if (
-            (!positions || positions.includes(POSITIONS[positionIndex])) &&
-            (!aligns || aligns.includes(ALIGNS[positionIndex]))
-        ) {
-            const coords = computeCoords(parentNormalizedRect, tooltipSize, {
-                margin,
-                position: POSITIONS[positionIndex],
-                align: ALIGNS[alignIndex]
-            });
-
-            if (
-                coords.top >= 0 &&
-                coords.left >= 0 &&
-                coords.top + tooltipSize.height <= document.documentElement.clientHeight &&
-                coords.left + tooltipSize.width <= document.documentElement.clientWidth
-            ) {
-                return coords;
-            }
+const isPositionAllowed = (
+    { top, right, bottom, left },
+    { width: tooltipWidth, height: tooltipHeight },
+    { margin, position }
+) => {
+    switch (position) {
+        case 'bottom': {
+            return (
+                bottom + tooltipHeight + margin <= document.documentElement.clientHeight &&
+                tooltipWidth <= document.documentElement.clientWidth
+            );
         }
-
-        alignIndex = (alignIndex + 1) % ALIGNS.length;
-
-        if (alignIndex === 0) {
-            positionIndex = (positionIndex + 1) % POSITIONS.length;
+        case 'top': {
+            return tooltipHeight + margin <= top && tooltipWidth <= document.documentElement.clientWidth;
+        }
+        case 'right': {
+            return (
+                right + tooltipWidth + margin <= document.documentElement.clientWidth &&
+                tooltipHeight <= document.documentElement.clientHeight
+            );
+        }
+        case 'left': {
+            return tooltipWidth + margin <= left && tooltipHeight <= document.documentElement.clientHeight;
+        }
+        default: {
+            return false;
         }
     }
+};
 
-    return initCoords;
+export default (parentNormalizedRect, tooltipSize, { margin, position, align }) => {
+    switch (position) {
+        case 'bottom': {
+            return (
+                (isPositionAllowed(parentNormalizedRect, tooltipSize, { margin, position: 'bottom' }) &&
+                    computePositionCoords(parentNormalizedRect, tooltipSize, { margin, position: 'bottom', align })) ||
+                (isPositionAllowed(parentNormalizedRect, tooltipSize, { margin, position: 'top' }) &&
+                    computePositionCoords(parentNormalizedRect, tooltipSize, { margin, position: 'top', align })) ||
+                (isPositionAllowed(parentNormalizedRect, tooltipSize, { margin, position: 'right' }) &&
+                    computePositionCoords(parentNormalizedRect, tooltipSize, {
+                        margin,
+                        position: 'right',
+                        align: 'start'
+                    })) ||
+                (isPositionAllowed(parentNormalizedRect, tooltipSize, { margin, position: 'left' }) &&
+                    computePositionCoords(parentNormalizedRect, tooltipSize, {
+                        margin,
+                        position: 'left',
+                        align: 'start'
+                    })) ||
+                null
+            );
+        }
+        case 'top': {
+            return (
+                (isPositionAllowed(parentNormalizedRect, tooltipSize, { margin, position: 'top' }) &&
+                    computePositionCoords(parentNormalizedRect, tooltipSize, { margin, position: 'top', align })) ||
+                (isPositionAllowed(parentNormalizedRect, tooltipSize, { margin, position: 'bottom' }) &&
+                    computePositionCoords(parentNormalizedRect, tooltipSize, { margin, position: 'bottom', align })) ||
+                (isPositionAllowed(parentNormalizedRect, tooltipSize, { margin, position: 'right' }) &&
+                    computePositionCoords(parentNormalizedRect, tooltipSize, {
+                        margin,
+                        position: 'right',
+                        align: 'end'
+                    })) ||
+                (isPositionAllowed(parentNormalizedRect, tooltipSize, { margin, position: 'left' }) &&
+                    computePositionCoords(parentNormalizedRect, tooltipSize, {
+                        margin,
+                        position: 'left',
+                        align: 'end'
+                    })) ||
+                null
+            );
+        }
+        case 'right': {
+            return (
+                (isPositionAllowed(parentNormalizedRect, tooltipSize, { margin, position: 'right' }) &&
+                    computePositionCoords(parentNormalizedRect, tooltipSize, { margin, position: 'right', align })) ||
+                (isPositionAllowed(parentNormalizedRect, tooltipSize, { margin, position: 'left' }) &&
+                    computePositionCoords(parentNormalizedRect, tooltipSize, { margin, position: 'left', align })) ||
+                (isPositionAllowed(parentNormalizedRect, tooltipSize, { margin, position: 'bottom' }) &&
+                    computePositionCoords(parentNormalizedRect, tooltipSize, {
+                        margin,
+                        position: 'bottom',
+                        align: 'start'
+                    })) ||
+                (isPositionAllowed(parentNormalizedRect, tooltipSize, { margin, position: 'top' }) &&
+                    computePositionCoords(parentNormalizedRect, tooltipSize, {
+                        margin,
+                        position: 'top',
+                        align: 'start'
+                    })) ||
+                null
+            );
+        }
+        case 'left': {
+            return (
+                (isPositionAllowed(parentNormalizedRect, tooltipSize, { margin, position: 'left' }) &&
+                    computePositionCoords(parentNormalizedRect, tooltipSize, { margin, position: 'left', align })) ||
+                (isPositionAllowed(parentNormalizedRect, tooltipSize, { margin, position: 'right' }) &&
+                    computePositionCoords(parentNormalizedRect, tooltipSize, { margin, position: 'right', align })) ||
+                (isPositionAllowed(parentNormalizedRect, tooltipSize, { margin, position: 'bottom' }) &&
+                    computePositionCoords(parentNormalizedRect, tooltipSize, {
+                        margin,
+                        position: 'bottom',
+                        align: 'end'
+                    })) ||
+                (isPositionAllowed(parentNormalizedRect, tooltipSize, { margin, position: 'top' }) &&
+                    computePositionCoords(parentNormalizedRect, tooltipSize, {
+                        margin,
+                        position: 'top',
+                        align: 'end'
+                    })) ||
+                null
+            );
+        }
+        default: {
+            return null;
+        }
+    }
 };

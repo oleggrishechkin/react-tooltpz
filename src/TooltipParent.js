@@ -31,10 +31,10 @@ const TooltipParent = ({ innerRef = null, tooltips, children = null, ...rest }) 
 
     return (
         <Fragment>
-            {!!children[0] && children[0]({ ...parentProps, innerRef: parentRef, tooltipsProps })}
+            {!!children[0] && children[0]({ ...parentProps, innerRef: parentRef }, { tooltipsProps })}
             {tooltipsProps.map(
-                (props, index) =>
-                    !!props.opened &&
+                ({ opened, ...props }, index) =>
+                    !!opened &&
                     !!children[index + 1] &&
                     React.cloneElement(children[index + 1], {
                         ...props,

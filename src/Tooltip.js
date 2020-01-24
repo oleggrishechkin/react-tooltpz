@@ -13,20 +13,13 @@ const Tooltip = ({
     margin = 4,
     position = POSITIONS[0],
     align = ALIGNS[0],
-    positions = null,
-    aligns = null,
     children = null,
     style = null,
+    setOpened = null,
     ...rest
 }) => {
     const tooltipRef = useInnerRef(innerRef);
-    const [coords, parentSize, tooltipSize] = useTooltip(parentRef, tooltipRef, {
-        margin,
-        position,
-        align,
-        positions,
-        aligns
-    });
+    const [coords, parentSize, tooltipSize] = useTooltip(parentRef, tooltipRef, { margin, position, align });
     const contextZIndex = useContext(ZIndexContext);
     const styleZIndex = (zIndex || 0) + (contextZIndex || 0);
     const extraStyle = useMemo(
@@ -46,13 +39,14 @@ const Tooltip = ({
         <ZIndexContext.Provider value={styleZIndex + 1}>
             {ReactDOM.createPortal(
                 !!children &&
-                    children({
-                        ...rest,
-                        innerRef: tooltipRef,
-                        style: extraStyle,
-                        parentSize,
-                        tooltipSize
-                    }),
+                    children(
+                        {
+                            ...rest,
+                            innerRef: tooltipRef,
+                            style: extraStyle
+                        },
+                        { parentSize, tooltipSize, setOpened }
+                    ),
                 document.body
             )}
         </ZIndexContext.Provider>
