@@ -1,19 +1,14 @@
 import { useState } from 'react';
 import useMethod from './useMethod';
-import decorateHandler from './decorateHandler';
 
-export default ({ parentProps }) => {
+export default () => {
     const [opened, setOpened] = useState(false);
-    const onMouseEnter = useMethod(
-        decorateHandler('onMouseEnter', parentProps, () => {
-            setOpened(true);
-        })
-    );
-    const onMouseLeave = useMethod(
-        decorateHandler('onMouseLeave', parentProps, () => {
-            setOpened(false);
-        })
-    );
+    const onMouseEnter = useMethod(() => {
+        setOpened(true);
+    });
+    const onMouseLeave = useMethod(() => {
+        setOpened(false);
+    });
 
     return [
         { onMouseEnter, onMouseLeave },

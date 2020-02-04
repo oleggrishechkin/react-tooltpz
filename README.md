@@ -62,7 +62,7 @@ name             |type                          |default|description
 -----------------|------------------------------|-------|-----------
 **innerRef**     |object                        |null   |parent ref
 **tooltips**     |array of functions            |[]     |tooltips `opened` logic
-**children**     |({ innerRef, ...rest }) => jsx|null   |parent render function
+**children**     |({ innerRef, ...rest }, { tooltipsProps }) => jsx|null   |parent render function
 
 ## `Tooltip`
 
@@ -70,17 +70,17 @@ Render tooltip
 
 #### Props
 
-name         |type                                                          |default|description
--------------|--------------------------------------------------------------|-------|-----------
-**innerRef** |object                                                        |null   |tooltip ref
-**parentRef**|object                                                        |null   |parent ref
-**margin**   |number                                                        |4      |margin between parent and tooltip
-**position** |one of [bottom, top, left, right]                             |bottom |tooltip position
-**align**    |one of [start, center, end]                                   |start  |tooltip align
-**positions**|array of [bottom, top, left, right] or null                   |null   |supported tooltip positions
-**aligns**   |array of [start, center, end] or null                         |null   |supported tooltip aligns
-**children** |({ innerRef, style, parentSize, tooltipSize, ...rest }) => jsx|null   |tooltip render function
-**style**    |object                                                        |null   |tooltip style
+name         |type                                                                          |default|description
+-------------|------------------------------------------------------------------------------|-------|-----------
+**innerRef** |object                                                                        |null   |tooltip ref
+**parentRef**|object                                                                        |null   |parent ref
+**zIndex**   |number                                                                        |0      |tooltip default zIndex
+**margin**   |number                                                                        |4      |margin between parent and tooltip
+**position** |one of [bottom, top, left, right]                                             |bottom |tooltip position
+**align**    |one of [start, center, end]                                                   |start  |tooltip align
+**children** |({ innerRef, style, ...rest }, { parentSize, tooltipSize, setOpened } ) => jsx|null   |tooltip render function
+**style**    |object                                                                        |null   |tooltip style
+**setOpened**|(opened) => void                                                              |null   |set tooltip `opened` state
 
 ## Hooks
 
@@ -104,8 +104,6 @@ name             |type            |description
 -----------------|----------------|-----------
 **parentRef**    |object          |parent ref
 **tooltipRef**   |object          |tooltip ref
-**parentProps**  |object          |merged parent props from previous hooks
-**tooltipsProps**|array of objects|tooltips props from previous hooks
 
 and should return `array` with two elements
 
@@ -114,7 +112,7 @@ index|type            |description
 0    |object          |parent props
 1    |object          |tooltip props
 
-tooltip props required props
+tooltip required props
 
 name     |type    |description
 ---------|--------|-----------

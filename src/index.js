@@ -1,6 +1,6 @@
 export { default as computeTooltipCoords } from './computeTooltipCoords';
-export { POSITIONS, ALIGNS } from './constants';
-export { default as decorateHandler } from './decorateHandler';
+export { POSITIONS, ALIGNS, DEFAULT_PARENT_PROPS, DEFAULT_TOOLTIP_PROPS } from './constants';
+export { default as mergeProps } from './mergeProps';
 export { default as Tooltip } from './Tooltip';
 export { default as TooltipParent } from './TooltipParent';
 export { default as useClickTooltip } from './useClickTooltip';

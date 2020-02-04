@@ -1,9 +1,8 @@
 import { useRef } from 'react';
 import useEvent from './useEvent';
 import useMethod from './useMethod';
-import decorateHandler from './decorateHandler';
 
-export default (onOutsideClick, handlers) => {
+export default (onOutsideClick) => {
     const clickedRef = useRef(false);
     const onDocumentMouseDown = (event) => {
         if (clickedRef.current || event.defaultPrevented || !onOutsideClick) {
@@ -23,15 +22,11 @@ export default (onOutsideClick, handlers) => {
     useEvent(window, 'touchstart', onDocumentMouseDown);
 
     return {
-        onMouseDown: useMethod(
-            decorateHandler('onMouseDown', handlers, () => {
-                clickedRef.current = true;
-            })
-        ),
+        onMouseDown: useMethod(() => {
+            clickedRef.current = true;
+        }),
         onTouchStart: useMethod(() => {
-            decorateHandler('onTouchStart', handlers, () => {
-                clickedRef.current = true;
-            });
+            clickedRef.current = true;
         })
     };
 };
