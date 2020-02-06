@@ -17,15 +17,16 @@ const useTooltip = (
             return;
         }
 
+        const parentRefRect = parentRef.current.getBoundingClientRect();
+        const tooltipRefRect = parentRef.current.getBoundingClientRect();
         const nextParentSize = {
-            width: parentRef.current.clientWidth,
-            height: parentRef.current.clientHeight
+            width: parentRefRect.width,
+            height: parentRefRect.height
         };
         const nextTooltipSize = {
-            width: tooltipRef.current.clientWidth,
-            height: tooltipRef.current.clientHeight
+            width: tooltipRefRect.width,
+            height: tooltipRefRect.height
         };
-        const parentRefRect = parentRef.current.getBoundingClientRect();
         const nextCoords = computeTooltipCoords(
             {
                 top: parentRefRect.top + window.pageYOffset,
