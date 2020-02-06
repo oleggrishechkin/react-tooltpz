@@ -18,7 +18,7 @@ const useTooltip = (
         }
 
         const parentRefRect = parentRef.current.getBoundingClientRect();
-        const tooltipRefRect = parentRef.current.getBoundingClientRect();
+        const tooltipRefRect = tooltipRef.current.getBoundingClientRect();
         const nextParentSize = {
             width: parentRefRect.width,
             height: parentRefRect.height
