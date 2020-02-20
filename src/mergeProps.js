@@ -27,9 +27,9 @@ export default (propsArray = []) => {
     });
 
     Object.keys(handlers).forEach((handlerName) => {
-        result[handlerName] = (event) => {
+        result[handlerName] = (...args) => {
             handlers[handlerName].forEach((handler) => {
-                handler(event);
+                handler(...args);
             });
         };
     });
