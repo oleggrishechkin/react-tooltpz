@@ -35,10 +35,10 @@ const TooltipParent = ({ innerRef = null, tooltips, children = null, ...rest }) 
                     !!opened &&
                     !!children[index + 1] &&
                     React.cloneElement(children[index + 1], {
-                        ...mergeProps([children[index + 1].props, props]),
-                        key: index,
                         innerRef: tooltipRefs[index],
-                        parentRef
+                        parentRef,
+                        key: index,
+                        ...mergeProps([children[index + 1].props, props])
                     })
             )}
         </Fragment>
