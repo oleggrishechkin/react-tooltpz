@@ -1,17 +1,18 @@
-import { useState } from 'react';
-import useMethod from './useMethod';
+import { useState, useCallback } from 'react';
 
-export default () => {
+const useFocusTooltip = () => {
     const [opened, setOpened] = useState(false);
-    const onFocus = useMethod(() => {
+    const onFocus = useCallback(() => {
         setOpened(true);
-    });
-    const onBlur = useMethod(() => {
+    }, []);
+    const onBlur = useCallback(() => {
         setOpened(false);
-    });
+    }, []);
 
     return [
         { onFocus, onBlur },
         { opened, setOpened }
     ];
 };
+
+export default useFocusTooltip;

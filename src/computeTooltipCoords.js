@@ -147,7 +147,7 @@ const isPositionAllowed = (
     }
 };
 
-export default (parentNormalizedRect, tooltipSize, { margin, position, align }) => {
+const computeTooltipCoords = (parentNormalizedRect, tooltipSize, { margin, position, align }) => {
     switch (position) {
         case 'bottom': {
             return (
@@ -238,3 +238,5 @@ export default (parentNormalizedRect, tooltipSize, { margin, position, align }) 
         }
     }
 };
+
+export default computeTooltipCoords;

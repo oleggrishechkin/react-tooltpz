@@ -1,4 +1,4 @@
-export default (propsArray = []) => {
+const mergeProps = (propsArray = []) => {
     const result = {};
     const handlers = {};
 
@@ -36,3 +36,5 @@ export default (propsArray = []) => {
 
     return result;
 };
+
+export default mergeProps;

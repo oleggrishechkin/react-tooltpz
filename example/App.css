@@ -1,0 +1,41 @@
+.app {
+    align-items: center;
+    background: black;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+}
+
+.header {
+    background-color: #4d5dfb;
+    background-image: linear-gradient(315deg, #4d5dfb 0%, #08c8f6 74%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    flex: 0 0 auto;
+}
+
+.main {
+    display: flex;
+    flex: 1 0 auto;
+    box-sizing: border-box;
+    flex-direction: column;
+}
+
+.parent {
+    background-color: #4d5dfb;
+    background-image: linear-gradient(315deg, #4d5dfb 0%, #08c8f6 74%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 1.5em;
+    margin: 2em 0;
+    align-self: center;
+}
+
+.tooltip {
+    background-color: #4d5dfb;
+    background-image: linear-gradient(315deg, #4d5dfb 0%, #08c8f6 74%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}

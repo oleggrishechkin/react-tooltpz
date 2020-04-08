@@ -1,17 +1,18 @@
-import { useState } from 'react';
-import useMethod from './useMethod';
+import { useState, useCallback } from 'react';
 
-export default () => {
+const useHoverTooltip = () => {
     const [opened, setOpened] = useState(false);
-    const onMouseEnter = useMethod(() => {
+    const onMouseEnter = useCallback(() => {
         setOpened(true);
-    });
-    const onMouseLeave = useMethod(() => {
+    }, []);
+    const onMouseLeave = useCallback(() => {
         setOpened(false);
-    });
+    }, []);
 
     return [
         { onMouseEnter, onMouseLeave },
         { opened, setOpened }
     ];
 };
+
+export default useHoverTooltip;

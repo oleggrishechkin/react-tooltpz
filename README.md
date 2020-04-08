@@ -4,16 +4,14 @@
 [![NPM total downloads](https://img.shields.io/npm/dt/react-tooltpz.svg?style=flat)](https://npmcharts.com/compare/react-tooltpz?minimal=true)
 [![NPM monthly downloads](https://img.shields.io/npm/dm/react-tooltpz.svg?style=flat)](https://npmcharts.com/compare/react-tooltpz?minimal=true)
 
-See simple [demo](https://oleggrishechkin.github.io/react-tooltpz)
+See [preview](https://oleggrishechkin.github.io/react-tooltpz)
 
-### Delicious tooltip component with zero dependencies
+### Flexible Tooltip Components with zero dependencies
 
-- Find visible position and align automatically 
+- Automatically find best position
 - Hover, Click and Focus logic out of the box
-- Extendable (support custom tooltip logic)
+- Support custom logic
 - Portal to document.body
-- Support multi tooltips
-- With outside click
 - No extra DOM nodes
 - Lightweight
 
@@ -31,19 +29,26 @@ npm install --save react-tooltpz
 import { TooltipParent, Tooltip, useHoverTooltip } from 'react-tooltpz';
 ```
 
+You can import directly for minimize bundle size 
+
+```javascript
+import TooltipParent from 'react-tooltpz/lib/TooltipParent';
+import Tooltip from 'react-tooltpz/lib/Tooltip';
+import useHoverTooltip from 'react-tooltpz/lib/useHoverTooltip';
+```
 ### Use:
 
 ```javascript
-<TooltipParent tooltips={[useHoverTooltip]}>
+<TooltipParent tooltip={useHoverTooltip}>
     {({ innerRef, tooltipsProps, ...rest }) => (
-        <button {...rest} className={theme.button} ref={innerRef}>
-            {'Try hover, click and focus'}
-        </button>
+        <div {...rest} ref={innerRef}>
+            {'Parent'}
+        </div>
     )}
-    <Tooltip position="bottom" align="center">
-        {({ innerRef, parentSize, tooltipSize, setOpened, ...rest }) => (
-            <div {...rest} className={theme.tooltip} ref={innerRef}>
-                {'Hovered'}
+    <Tooltip>
+        {({ innerRef, ...rest }) => (
+            <div {...rest} ref={innerRef}>
+                {'Tooltip'}
             </div>
         )}
     </Tooltip>
@@ -58,11 +63,11 @@ Render parent
 
 #### Props
 
-name             |type                          |default|description
------------------|------------------------------|-------|-----------
-**innerRef**     |object                        |null   |parent ref
-**tooltips**     |array of functions            |[]     |tooltips `opened` logic
-**children**     |({ innerRef, ...rest }, { tooltipsProps }) => jsx|null   |parent render function
+name             |type                                                                 |default|description
+-----------------|---------------------------------------------------------------------|-------|-----------
+**innerRef**     |object                                                               |null   |parent ref
+**tooltip**     |function (react hook)                                                 |-      |tooltip `opened` logic
+**children**     |({ innerRef, ...rest }, { opened, setOpened, ...tooltipRest }) => jsx|null   |parent render function
 
 ## `Tooltip`
 
@@ -82,7 +87,7 @@ name         |type                                                              
 **style**    |object                                                                        |null   |tooltip style
 **setOpened**|(opened) => void                                                              |null   |set tooltip `opened` state
 
-## Hooks
+## Logic hooks
 
 ## `useHoverTolltip`
 
@@ -96,28 +101,18 @@ open tooltip by click
 
 open tooltip by focus
 
-## Building Your Own Hooks
+## Write your own logic hook
 
-Hooks can accept `object` with props
+```javascript
+const [parentProps, { opened, setOpened, ...tooltipProps }] = useMyOwnLogicHook({ parentRef, tooltipRef });
+```
 
-name             |type            |description
------------------|----------------|-----------
-**parentRef**    |object          |parent ref
-**tooltipRef**   |object          |tooltip ref
+Accepts `object` with `parentRef` and `tooltipRef`
 
-and should return `array` with two elements
+Returns `array` with `parent` and `tooltip` props
 
-index|type            |description
------|----------------|-----------
-0    |object          |parent props
-1    |object          |tooltip props
+*You should provide `tooltip` `opened` and `setOpened` required props
 
-tooltip required props
-
-name     |type    |description
----------|--------|-----------
-opened   |bool    |tooltip `opened` state
-setOpened|function|set tooltip `opened` state
 
 #### Example
 
@@ -131,3 +126,19 @@ const useSimpleClickTooltip = () => {
     return [{ onClick }, { opened, setOpened }];
 };
 ```
+
+*You should use `useCallback`, `useMemo` and `useRef` hooks to prevent unnecessary re renders
+
+## Extra
+
+You can use this in your logic hooks or other code
+
+## `useOutsideClick`
+
+```javascript
+const { onMouseDown, onTouchStart } = useOutsideClick(onOutsideClick);
+```
+
+Accepts `function` that calls when outside click happened
+
+Returns `object` with `onMouseDown` and `onTouchStart` handlers

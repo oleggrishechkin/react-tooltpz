@@ -1,38 +1,52 @@
 import React from 'react';
 import { Tooltip, TooltipParent, useHoverTooltip, useClickTooltip, useFocusTooltip } from '../src';
-import theme from './App.module.css';
+import './App.css';
 
 const App = () => (
-    <div className={theme.app}>
-        <header className={theme.header}>
+    <div className="app">
+        <header className="header">
             <h1>{'React Tooltpz'}</h1>
         </header>
-        <main className={theme.main}>
-            <TooltipParent tooltips={[useHoverTooltip, useClickTooltip, useFocusTooltip]}>
-                {({ innerRef, tooltipsProps, ...rest }) => (
-                    <button {...rest} className={theme.button} ref={innerRef}>
-                        {'Try hover, click and focus'}
-                    </button>
+        <main className="main">
+            <TooltipParent tooltip={useHoverTooltip}>
+                {({ innerRef, ...rest }, { opened }) => (
+                    <span {...rest} className="parent" ref={innerRef}>
+                        {opened ? 'Try avoid me' : 'Try hover me'}
+                    </span>
                 )}
-                <Tooltip position="bottom" align="center">
-                    {({ innerRef, parentSize, tooltipSize, setOpened, ...rest }) => (
-                        <div {...rest} className={theme.tooltip} ref={innerRef}>
+                <Tooltip align="center">
+                    {({ innerRef, ...rest }) => (
+                        <span {...rest} className="tooltip" ref={innerRef}>
                             {'Hovered'}
-                        </div>
+                        </span>
                     )}
                 </Tooltip>
-                <Tooltip position="top" align="center">
-                    {({ innerRef, parentSize, tooltipSize, setOpened, ...rest }) => (
-                        <div {...rest} className={theme.tooltip} ref={innerRef}>
+            </TooltipParent>
+            <TooltipParent tooltip={useClickTooltip}>
+                {({ innerRef, ...rest }, { opened }) => (
+                    <span {...rest} className="parent" ref={innerRef}>
+                        {opened ? 'Try click outside me' : 'Try click me'}
+                    </span>
+                )}
+                <Tooltip align="center">
+                    {({ innerRef, ...rest }) => (
+                        <span {...rest} className="tooltip" ref={innerRef}>
                             {'Clicked'}
-                        </div>
+                        </span>
                     )}
                 </Tooltip>
-                <Tooltip position="right" align="center">
-                    {({ innerRef, parentSize, tooltipSize, setOpened, ...rest }) => (
-                        <div {...rest} className={theme.tooltip} ref={innerRef}>
+            </TooltipParent>
+            <TooltipParent tooltip={useFocusTooltip}>
+                {({ innerRef, ...rest }, { opened }) => (
+                    <span tabIndex={-1} {...rest} className="parent" ref={innerRef}>
+                        {opened ? 'Try blur me' : 'Try focus me'}
+                    </span>
+                )}
+                <Tooltip align="center">
+                    {({ innerRef, ...rest }) => (
+                        <span {...rest} className="tooltip" ref={innerRef}>
                             {'Focused'}
-                        </div>
+                        </span>
                     )}
                 </Tooltip>
             </TooltipParent>

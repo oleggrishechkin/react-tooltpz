@@ -1,9 +1,6 @@
-/* eslint-disable react/prop-types */
-import React, { useMemo, useContext } from 'react';
+import React, { useMemo, useContext, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import useTooltip from './useTooltip';
-import useInnerRef from './useInnerRef';
-import { POSITIONS, ALIGNS } from './constants';
 import ZIndexContext from './ZIndexContext';
 
 const Tooltip = ({
@@ -11,14 +8,15 @@ const Tooltip = ({
     parentRef = null,
     zIndex = 0,
     margin = 4,
-    position = POSITIONS[0],
-    align = ALIGNS[0],
+    position = 'bottom',
+    align = 'start',
     children = null,
     style = null,
     setOpened = null,
     ...rest
 }) => {
-    const tooltipRef = useInnerRef(innerRef);
+    const ref = useRef(null);
+    const tooltipRef = innerRef || ref;
     const [coords, parentSize, tooltipSize] = useTooltip(parentRef, tooltipRef, { margin, position, align });
     const contextZIndex = useContext(ZIndexContext);
     const styleZIndex = (zIndex || 0) + (contextZIndex || 0);

@@ -1,32 +1,41 @@
-import { useRef } from 'react';
-import useEvent from './useEvent';
-import useMethod from './useMethod';
+import { useRef, useEffect, useCallback } from 'react';
 
-export default (onOutsideClick) => {
+const useOutsideClick = (onOutsideClick) => {
     const clickedRef = useRef(false);
-    const onDocumentMouseDown = (event) => {
-        if (clickedRef.current || event.defaultPrevented || !onOutsideClick) {
-            clickedRef.current = false;
+    const onDocumentMouseDown = useCallback(
+        (event) => {
+            if (clickedRef.current || event.defaultPrevented || !onOutsideClick) {
+                clickedRef.current = false;
 
-            return;
-        }
-
-        setTimeout(() => {
-            if (!clickedRef.current) {
-                onOutsideClick(event);
+                return;
             }
-        }, 0);
-    };
 
-    useEvent(window, 'mousedown', onDocumentMouseDown);
-    useEvent(window, 'touchstart', onDocumentMouseDown);
+            setTimeout(() => {
+                if (!clickedRef.current) {
+                    onOutsideClick(event);
+                }
+            }, 0);
+        },
+        [onOutsideClick]
+    );
+    const onMouseDown = useCallback(() => {
+        clickedRef.current = true;
+    }, []);
+
+    useEffect(() => {
+        window.addEventListener('mousedown', onDocumentMouseDown);
+        window.addEventListener('touchstart', onDocumentMouseDown);
+
+        return () => {
+            window.addEventListener('mousedown', onDocumentMouseDown);
+            window.addEventListener('touchstart', onDocumentMouseDown);
+        };
+    }, [onDocumentMouseDown]);
 
     return {
-        onMouseDown: useMethod(() => {
-            clickedRef.current = true;
-        }),
-        onTouchStart: useMethod(() => {
-            clickedRef.current = true;
-        })
+        onMouseDown,
+        onTouchStart: onMouseDown
     };
 };
+
+export default useOutsideClick;

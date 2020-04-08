@@ -1,19 +1,22 @@
-import { useState } from 'react';
-import useMethod from './useMethod';
+import { useState, useCallback } from 'react';
 import useOutsideClick from './useOutsideClick';
 
-export default ({ parentRef }) => {
+const useClickTooltip = ({ parentRef }) => {
     const [opened, setOpened] = useState(false);
-    const onClick = useMethod(() => {
+    const onClick = useCallback(() => {
         setOpened((value) => !value);
-    });
-    const { onMouseDown, onTouchStart } = useOutsideClick((event) => {
-        if (parentRef.current && parentRef.current.contains(event.target)) {
-            return;
-        }
+    }, []);
+    const onOutsideClick = useCallback(
+        (event) => {
+            if (parentRef.current && parentRef.current.contains(event.target)) {
+                return;
+            }
 
-        setOpened(false);
-    });
+            setOpened(false);
+        },
+        [parentRef]
+    );
+    const { onMouseDown, onTouchStart } = useOutsideClick(onOutsideClick);
 
     return [
         { onClick },
@@ -25,3 +28,5 @@ export default ({ parentRef }) => {
         }
     ];
 };
+
+export default useClickTooltip;
