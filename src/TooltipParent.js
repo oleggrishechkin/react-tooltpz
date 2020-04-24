@@ -9,7 +9,7 @@ const TooltipParent = ({ innerRef = null, tooltip, children = null, ...rest }) =
         parentRef,
         tooltipRef
     });
-    const { opened, setOpened, ...tooltipRest } = tooltipProps;
+    const { opened, ...tooltipRest } = tooltipProps;
     const [parentElement, tooltipElement] = children;
 
     return (
@@ -19,7 +19,7 @@ const TooltipParent = ({ innerRef = null, tooltip, children = null, ...rest }) =
                 !!tooltipElement &&
                 React.cloneElement(
                     tooltipElement,
-                    mergeProps([tooltipElement.props, tooltipRest, { innerRef: tooltipRef, parentRef }])
+                    mergeProps([tooltipElement.props, { innerRef: tooltipRef, parentRef }, tooltipRest])
                 )}
         </Fragment>
     );
