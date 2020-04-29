@@ -5,7 +5,14 @@ import './App.css';
 const App = () => (
     <div className="app">
         <header className="header">
-            <h1>{'React Tooltpz'}</h1>
+            <a
+                className="link"
+                href="https://github.com/oleggrishechkin/react-tooltpz"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                {'React Tooltpz'}
+            </a>
         </header>
         <main className="main">
             <TooltipParent tooltip={useHoverTooltip}>

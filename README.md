@@ -4,7 +4,7 @@
 [![NPM total downloads](https://img.shields.io/npm/dt/react-tooltpz.svg?style=flat)](https://npmcharts.com/compare/react-tooltpz?minimal=true)
 [![NPM monthly downloads](https://img.shields.io/npm/dm/react-tooltpz.svg?style=flat)](https://npmcharts.com/compare/react-tooltpz?minimal=true)
 
-See [preview](https://oleggrishechkin.github.io/react-tooltpz)
+Try [demo](https://oleggrishechkin.github.io/react-tooltpz)
 
 ### Flexible Tooltip Components with zero dependencies
 
@@ -13,67 +13,70 @@ See [preview](https://oleggrishechkin.github.io/react-tooltpz)
 - Support custom logic
 - Portal to document.body
 - No extra DOM nodes
-- Lightweight
+- Lightweight (2.8kb minified+gzipped)
 
 ## Getting Started
 
-### Install:
+#### Installation:
 
 ```shell script
 npm install --save react-tooltpz
 ```
 
-### Import:
+#### Importing:
 
 ```javascript
 import { TooltipParent, Tooltip, useHoverTooltip } from 'react-tooltpz';
 ```
 
-You can import directly for minimize bundle size 
+You also can import directly what you want 
 
 ```javascript
 import TooltipParent from 'react-tooltpz/lib/TooltipParent';
 import Tooltip from 'react-tooltpz/lib/Tooltip';
 import useHoverTooltip from 'react-tooltpz/lib/useHoverTooltip';
 ```
-### Use:
+#### Basic Usage:
 
 ```javascript
-<TooltipParent tooltip={useHoverTooltip}>
-    {({ innerRef, tooltipsProps, ...rest }) => (
-        <div {...rest} ref={innerRef}>
-            {'Parent'}
-        </div>
-    )}
-    <Tooltip>
+import React from 'react';
+import { TooltipParent, Tooltip, useHoverTooltip } from 'react-tooltpz';
+
+const TitleWithTooltip = ({ title, tooltip }) => (
+    <TooltipParent tooltip={useHoverTooltip}>
         {({ innerRef, ...rest }) => (
             <div {...rest} ref={innerRef}>
-                {'Tooltip'}
+                {title}
             </div>
         )}
-    </Tooltip>
-</TooltipParent>
+        <Tooltip>
+            {({ innerRef, ...rest }) => (
+                <div {...rest} ref={innerRef}>
+                    {tooltip}
+                </div>
+            )}
+        </Tooltip>
+    </TooltipParent>
+);
+
+export default TitleWithTooltip;
 ```
 
 ## Components
 
 ## `TooltipParent`
 
-Render parent
-
-#### Props
+### Props
 
 name             |type                                                                 |default|description
 -----------------|---------------------------------------------------------------------|-------|-----------
 **innerRef**     |object                                                               |null   |parent ref
-**tooltip**     |function (react hook)                                                 |-      |tooltip `opened` logic
+**tooltip**      |function (react hook)                                                |-      |tooltip `opened` logic
 **children**     |({ innerRef, ...rest }, { opened, setOpened, ...tooltipRest }) => jsx|null   |parent render function
 
 ## `Tooltip`
 
-Render tooltip
-
-#### Props
+### Props
 
 name         |type                                                                          |default|description
 -------------|------------------------------------------------------------------------------|-------|-----------
@@ -89,17 +92,17 @@ name         |type                                                              
 
 ## Logic hooks
 
-## `useHoverTolltip`
+- ### `useHoverTolltip`
 
-open tooltip by hover
+    open tooltip by mouse enter and close by mouse leave
 
-## `useClickTolltip`
+- ### `useClickTolltip`
 
-open tooltip by click
+    open tooltip by click and close by click and outside click
 
-## `useFocusTolltip`
+- ### `useFocusTolltip`
 
-open tooltip by focus
+    open tooltip by focus and close by blur
 
 ## Write your own logic hook
 
@@ -107,16 +110,16 @@ open tooltip by focus
 const [parentProps, { opened, setOpened, ...tooltipProps }] = useMyOwnLogicHook({ parentRef, tooltipRef });
 ```
 
-Accepts `object` with `parentRef` and `tooltipRef`
+- Accepts `object` with `parentRef` and `tooltipRef` props
 
-Returns `array` with `parent` and `tooltip` props
+- Returns `array` with `parentProps` and `tooltipProps` items
 
-*You should provide `tooltip` `opened` and `setOpened` required props
+- `tooltipProps` required `opened` and `setOpened` props
 
 
-#### Example
+### Example
 
-```
+```javascript
 const useSimpleClickTooltip = () => {
     const [opened, setOpened] = useState(false);
     const onClick = useCallback(() => {
@@ -127,18 +130,4 @@ const useSimpleClickTooltip = () => {
 };
 ```
 
-*You should use `useCallback`, `useMemo` and `useRef` hooks to prevent unnecessary re renders
-
-## Extra
-
-You can use this in your logic hooks or other code
-
-## `useOutsideClick`
-
-```javascript
-const { onMouseDown, onTouchStart } = useOutsideClick(onOutsideClick);
-```
-
-Accepts `function` that calls when outside click happened
-
-Returns `object` with `onMouseDown` and `onTouchStart` handlers
+You should use `useCallback`, `useMemo` and `useRef` hooks to prevent unnecessary re renders
