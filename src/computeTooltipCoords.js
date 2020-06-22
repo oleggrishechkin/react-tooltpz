@@ -148,11 +148,13 @@ const isPositionAllowed = (
 };
 
 const computeTooltipCoords = (parentNormalizedRect, tooltipSize, { margin, position, align }) => {
+    const preferredCoords = computePositionCoords(parentNormalizedRect, tooltipSize, { margin, position, align });
+
     switch (position) {
         case 'bottom': {
             return (
                 (isPositionAllowed(parentNormalizedRect, tooltipSize, { margin, position: 'bottom' }) &&
-                    computePositionCoords(parentNormalizedRect, tooltipSize, { margin, position: 'bottom', align })) ||
+                    preferredCoords) ||
                 (isPositionAllowed(parentNormalizedRect, tooltipSize, { margin, position: 'top' }) &&
                     computePositionCoords(parentNormalizedRect, tooltipSize, { margin, position: 'top', align })) ||
                 (isPositionAllowed(parentNormalizedRect, tooltipSize, { margin, position: 'right' }) &&
@@ -167,13 +169,13 @@ const computeTooltipCoords = (parentNormalizedRect, tooltipSize, { margin, posit
                         position: 'left',
                         align: 'start'
                     })) ||
-                null
+                preferredCoords
             );
         }
         case 'top': {
             return (
                 (isPositionAllowed(parentNormalizedRect, tooltipSize, { margin, position: 'top' }) &&
-                    computePositionCoords(parentNormalizedRect, tooltipSize, { margin, position: 'top', align })) ||
+                    preferredCoords) ||
                 (isPositionAllowed(parentNormalizedRect, tooltipSize, { margin, position: 'bottom' }) &&
                     computePositionCoords(parentNormalizedRect, tooltipSize, { margin, position: 'bottom', align })) ||
                 (isPositionAllowed(parentNormalizedRect, tooltipSize, { margin, position: 'right' }) &&
@@ -188,13 +190,13 @@ const computeTooltipCoords = (parentNormalizedRect, tooltipSize, { margin, posit
                         position: 'left',
                         align: 'end'
                     })) ||
-                null
+                preferredCoords
             );
         }
         case 'right': {
             return (
                 (isPositionAllowed(parentNormalizedRect, tooltipSize, { margin, position: 'right' }) &&
-                    computePositionCoords(parentNormalizedRect, tooltipSize, { margin, position: 'right', align })) ||
+                    preferredCoords) ||
                 (isPositionAllowed(parentNormalizedRect, tooltipSize, { margin, position: 'left' }) &&
                     computePositionCoords(parentNormalizedRect, tooltipSize, { margin, position: 'left', align })) ||
                 (isPositionAllowed(parentNormalizedRect, tooltipSize, { margin, position: 'bottom' }) &&
@@ -209,13 +211,13 @@ const computeTooltipCoords = (parentNormalizedRect, tooltipSize, { margin, posit
                         position: 'top',
                         align: 'start'
                     })) ||
-                null
+                preferredCoords
             );
         }
         case 'left': {
             return (
                 (isPositionAllowed(parentNormalizedRect, tooltipSize, { margin, position: 'left' }) &&
-                    computePositionCoords(parentNormalizedRect, tooltipSize, { margin, position: 'left', align })) ||
+                    preferredCoords) ||
                 (isPositionAllowed(parentNormalizedRect, tooltipSize, { margin, position: 'right' }) &&
                     computePositionCoords(parentNormalizedRect, tooltipSize, { margin, position: 'right', align })) ||
                 (isPositionAllowed(parentNormalizedRect, tooltipSize, { margin, position: 'bottom' }) &&
@@ -230,11 +232,11 @@ const computeTooltipCoords = (parentNormalizedRect, tooltipSize, { margin, posit
                         position: 'top',
                         align: 'end'
                     })) ||
-                null
+                preferredCoords
             );
         }
         default: {
-            return null;
+            return preferredCoords;
         }
     }
 };

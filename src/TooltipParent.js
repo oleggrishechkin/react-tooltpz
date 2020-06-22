@@ -14,7 +14,8 @@ const TooltipParent = ({ innerRef = null, tooltip, children = null, ...rest }) =
 
     return (
         <Fragment>
-            {!!parentElement && parentElement(mergeProps([rest, parentProps, { innerRef: parentRef }]), tooltipProps)}
+            {!!parentElement &&
+                parentElement(mergeProps([rest, parentProps, { innerRef: parentRef }]), { ...tooltipProps, opened })}
             {!!opened &&
                 !!tooltipElement &&
                 React.cloneElement(

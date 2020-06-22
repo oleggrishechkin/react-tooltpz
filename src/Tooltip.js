@@ -20,10 +20,10 @@ const Tooltip = ({
     const [coords, parentSize, tooltipSize] = useTooltip(parentRef, tooltipRef, { margin, position, align });
     const contextZIndex = useContext(ZIndexContext);
     const styleZIndex = (zIndex || 0) + (contextZIndex || 0);
-    const extraStyle = useMemo(
+    const tooltipStyle = useMemo(
         () => ({
             ...style,
-            position: 'absolute',
+            position: 'fixed',
             zIndex: styleZIndex,
             top: 0,
             left: 0,
@@ -41,7 +41,7 @@ const Tooltip = ({
                         {
                             ...rest,
                             innerRef: tooltipRef,
-                            style: extraStyle
+                            style: tooltipStyle
                         },
                         { parentSize, tooltipSize, setOpened }
                     ),
