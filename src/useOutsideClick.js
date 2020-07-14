@@ -27,8 +27,8 @@ const useOutsideClick = (onOutsideClick) => {
         window.addEventListener('touchstart', onDocumentMouseDown);
 
         return () => {
-            window.addEventListener('mousedown', onDocumentMouseDown);
-            window.addEventListener('touchstart', onDocumentMouseDown);
+            window.removeEventListener('mousedown', onDocumentMouseDown);
+            window.removeEventListener('touchstart', onDocumentMouseDown);
         };
     }, [onDocumentMouseDown]);
 

@@ -1,4 +1,10 @@
-# 2.1.0 (22 June 2020)
+# 3.0.1 (14 July 2020)
+
+## Fixed
+
+- Listeners added instead removed from `window` in `useOutsideClick` in `useEffect` hook 
+
+# 3.0.0 (22 June 2020)
 
 ## Breaking
 
