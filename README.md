@@ -4,6 +4,8 @@
 [![NPM total downloads](https://img.shields.io/npm/dt/react-tooltpz.svg?style=flat)](https://npmcharts.com/compare/react-tooltpz?minimal=true)
 [![NPM monthly downloads](https://img.shields.io/npm/dm/react-tooltpz.svg?style=flat)](https://npmcharts.com/compare/react-tooltpz?minimal=true)
 
+Low-level components for creating menus, tooltips, hints, dropdown and other popups
+
 ## Flexible Tooltip Components with zero dependencies
 
 - Automatically find best position
@@ -79,17 +81,18 @@ Try [demo](https://oleggrishechkin.github.io/react-tooltpz)
 
     **Props**
     
-    name         |type                                                                          |default |description
-    -------------|------------------------------------------------------------------------------|--------|-----------
-    **innerRef** |object                                                                        |null    |Tooltip `ref` object
-    **parentRef**|object                                                                        |null    |Parent `ref` object
-    **zIndex**   |number                                                                        |0       |Tooltip default `z-index`
-    **margin**   |number                                                                        |4       |Margin between parent and tooltip
-    **position** |one of [_bottom_, _top_, _left_, _right_]                                     |_bottom_|Tooltip position
-    **align**    |one of [_start_, _center_, _end_]                                             |_start_ |Tooltip align
-    **children** |({ innerRef, style, ...rest }, { parentSize, tooltipSize, setOpened } ) => jsx|null    |Tooltip render function
-    **style**    |object                                                                        |null    |Tooltip `style`
-    **setOpened**|(opened) => void                                                              |null    |Tooltip `opened` change function
+    name          |type                                                                          |default      |description
+    --------------|------------------------------------------------------------------------------|-------------|-----------
+    **innerRef**  |object                                                                        |null         |Tooltip `ref` object
+    **parentRef** |object                                                                        |null         |Parent `ref` object
+    **zIndex**    |number                                                                        |0            |Tooltip default `z-index`
+    **margin**    |number                                                                        |4            |Margin between parent and tooltip
+    **position**  |one of [_bottom_, _top_, _left_, _right_]                                     |_bottom_     |Tooltip position
+    **align**     |one of [_start_, _center_, _end_]                                             |_start_      |Tooltip align
+    **children**  |({ innerRef, style, ...rest }, { parentSize, tooltipSize, setOpened } ) => jsx|null         |Tooltip render function
+    **style**     |object                                                                        |null         |Tooltip `style`
+    **setOpened** |(opened) => void                                                              |null         |Tooltip `opened` change function
+    **portalNode**|DOM node                                                                      |document.body|Container for `ReadDOM.createPortal`
 
 ## Logic hooks
 

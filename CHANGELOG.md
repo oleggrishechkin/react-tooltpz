@@ -1,3 +1,14 @@
+# 3.1.0 (02 November 2020)
+
+## Updates
+
+- Update devDependencies
+- Update README.md 
+
+## Features
+
+- New **portalNode** prop for `Tooltip`
+
 # 3.0.1 (14 July 2020)
 
 ## Fixed

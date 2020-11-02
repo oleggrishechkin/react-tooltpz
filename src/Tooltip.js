@@ -13,6 +13,7 @@ const Tooltip = ({
     children = null,
     style = null,
     setOpened = null,
+    portalNode = null,
     ...rest
 }) => {
     const ref = useRef(null);
@@ -45,7 +46,7 @@ const Tooltip = ({
                         },
                         { parentSize, tooltipSize, setOpened }
                     ),
-                document.body
+                portalNode || document.body
             )}
         </ZIndexContext.Provider>
     );
