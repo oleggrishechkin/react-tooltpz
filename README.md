@@ -15,7 +15,7 @@ Low-level components for creating menus, tooltips, hints, dropdown and other pop
 - No extra DOM nodes
 - Lightweight (2.8kb minified+gzipped)
 
-Try [demo](https://oleggrishechkin.github.io/react-tooltpz)
+Try [demo](https://codesandbox.io/s/react-tooltpz-diej4)
 
 ## Getting Started
 
