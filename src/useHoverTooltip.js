@@ -9,10 +9,7 @@ const useHoverTooltip = () => {
         setOpened(false);
     }, []);
 
-    return [
-        { onMouseEnter, onMouseLeave },
-        { opened, setOpened }
-    ];
+    return [{ onMouseEnter, onMouseLeave }, { opened, setOpened }];
 };
 
 export default useHoverTooltip;

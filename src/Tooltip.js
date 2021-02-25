@@ -2,10 +2,11 @@ import React, { useMemo, useContext, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import useTooltip from './useTooltip';
 import ZIndexContext from './ZIndexContext';
+import PortalNodeContext from './PortalNodeContext';
 
 const Tooltip = ({
     innerRef = null,
-    parentRef = null,
+    parentRef,
     zIndex = 0,
     margin = 4,
     position = 'bottom',
@@ -20,22 +21,23 @@ const Tooltip = ({
     const tooltipRef = innerRef || ref;
     const [coords, parentSize, tooltipSize] = useTooltip(parentRef, tooltipRef, { margin, position, align });
     const contextZIndex = useContext(ZIndexContext);
-    const styleZIndex = (zIndex || 0) + (contextZIndex || 0);
+    const contextPortalNode = useContext(PortalNodeContext);
+    const tooltipZIndex = (zIndex || 0) + (contextZIndex || 0);
     const tooltipStyle = useMemo(
         () => ({
             ...style,
             position: 'fixed',
-            zIndex: styleZIndex,
+            zIndex: tooltipZIndex,
             top: 0,
             left: 0,
             ...(coords ? {} : { opacity: 0 }),
             ...coords
         }),
-        [coords, style, styleZIndex]
+        [coords, style, tooltipZIndex]
     );
 
     return (
-        <ZIndexContext.Provider value={styleZIndex + 1}>
+        <ZIndexContext.Provider value={tooltipZIndex + 1}>
             {ReactDOM.createPortal(
                 !!children &&
                     children(
@@ -46,7 +48,7 @@ const Tooltip = ({
                         },
                         { parentSize, tooltipSize, setOpened }
                     ),
-                portalNode || document.body
+                portalNode || contextPortalNode
             )}
         </ZIndexContext.Provider>
     );

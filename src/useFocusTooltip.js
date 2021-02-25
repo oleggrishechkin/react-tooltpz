@@ -9,10 +9,7 @@ const useFocusTooltip = () => {
         setOpened(false);
     }, []);
 
-    return [
-        { onFocus, onBlur },
-        { opened, setOpened }
-    ];
+    return [{ onFocus, onBlur }, { opened, setOpened }];
 };
 
 export default useFocusTooltip;

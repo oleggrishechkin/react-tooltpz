@@ -2,9 +2,17 @@ import { useRef, useEffect, useCallback } from 'react';
 
 const useOutsideClick = (onOutsideClick) => {
     const clickedRef = useRef(false);
-    const onDocumentMouseDown = useCallback(
-        (event) => {
-            if (clickedRef.current || event.defaultPrevented || !onOutsideClick) {
+    const outsideClickRef = useRef(null);
+
+    outsideClickRef.current = onOutsideClick;
+
+    const onMouseDown = useCallback(() => {
+        clickedRef.current = true;
+    }, []);
+
+    useEffect(() => {
+        const onDocumentMouseDown = (event) => {
+            if (clickedRef.current || event.defaultPrevented || !outsideClickRef.current) {
                 clickedRef.current = false;
 
                 return;
@@ -12,17 +20,11 @@ const useOutsideClick = (onOutsideClick) => {
 
             setTimeout(() => {
                 if (!clickedRef.current) {
-                    onOutsideClick(event);
+                    outsideClickRef.current(event);
                 }
             }, 0);
-        },
-        [onOutsideClick]
-    );
-    const onMouseDown = useCallback(() => {
-        clickedRef.current = true;
-    }, []);
+        };
 
-    useEffect(() => {
         window.addEventListener('mousedown', onDocumentMouseDown);
         window.addEventListener('touchstart', onDocumentMouseDown);
 
@@ -30,7 +32,7 @@ const useOutsideClick = (onOutsideClick) => {
             window.removeEventListener('mousedown', onDocumentMouseDown);
             window.removeEventListener('touchstart', onDocumentMouseDown);
         };
-    }, [onDocumentMouseDown]);
+    }, []);
 
     return {
         onMouseDown,

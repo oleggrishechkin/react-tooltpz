@@ -6,17 +6,13 @@ const useClickTooltip = ({ parentRef }) => {
     const onClick = useCallback(() => {
         setOpened((value) => !value);
     }, []);
-    const onOutsideClick = useCallback(
-        (event) => {
-            if (parentRef.current && parentRef.current.contains(event.target)) {
-                return;
-            }
+    const { onMouseDown, onTouchStart } = useOutsideClick((event) => {
+        if (parentRef.current && parentRef.current.contains(event.target)) {
+            return;
+        }
 
-            setOpened(false);
-        },
-        [parentRef]
-    );
-    const { onMouseDown, onTouchStart } = useOutsideClick(onOutsideClick);
+        setOpened(false);
+    });
 
     return [
         { onClick },

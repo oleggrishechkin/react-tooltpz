@@ -108,6 +108,30 @@ Try [demo](https://codesandbox.io/s/react-tooltpz-diej4)
 
     open tooltip by focus and close by blur
 
+## Contexts
+
+- ### PortalNodeContext
+
+    provide portalNode to all tooltips
+
+- ### ZIndexContext
+
+    provide zIndex to all tooltips
+
+## Helpers
+
+- ### useOutsideClick
+    
+    track click outside element with portal support
+
+    ```javascript
+    const { onMouseDown, onTouchStart } = useOutsideClick(onOutsideClick);
+    ```
+
+    Accepts: `function`
+  
+    Returns: `object` with `onMouseDown` and `onTouchStart` props, you should set this event handlers on target element
+
 ## Write your own logic hook
 
 - ### API

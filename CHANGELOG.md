@@ -1,3 +1,13 @@
+# 3.2.0 (25 February 2021)
+
+## Updates
+
+- Update README.md
+
+## Features
+
+- Add **PortalNodeContext**
+
 # 3.1.1 (12 January 2021)
 
 ## Updates

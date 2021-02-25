@@ -2,14 +2,14 @@ import { useState, useRef, useEffect } from 'react';
 import computeTooltipCoords from './computeTooltipCoords';
 
 const useTooltip = (
-    parentRef = null,
-    tooltipRef = null,
+    parentRef,
+    tooltipRef,
     { margin = 4, position = 'bottom', align = 'start', positions = null, aligns = null } = {}
 ) => {
     const [coords, setCoords] = useState(null);
     const [parentSize, setParentSize] = useState(null);
     const [tooltipSize, setTooltipSize] = useState(null);
-    const stepRef = useRef(() => {});
+    const stepRef = useRef(null);
 
     stepRef.current = () => {
         if (!parentRef.current || !tooltipRef.current) {
