@@ -75,7 +75,7 @@ Try [demo](https://codesandbox.io/s/react-tooltpz-diej4)
     -----------------|---------------------------------------------------------------------|--------|-----------
     **innerRef**     |object                                                               |null    |Parent `ref` object
     **tooltip**      |function (react hook)                                                |required|Tooltip `opened` logic
-    **children**     |({ innerRef, ...rest }, { opened, setOpened, ...tooltipRest }) => jsx|null    |Parent render function
+    **children**     |({ innerRef, ...rest }, { opened, setOpened, ...tooltipRest }) => jsx|required|Parent render function
 
 - ### Tooltip
 

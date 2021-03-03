@@ -1,16 +1,6 @@
-import {
-    useRef,
-    Fragment,
-    ReactChildren,
-    Children,
-    MutableRefObject,
-    cloneElement,
-    ReactNode,
-    ReactElement,
-    FC
-} from 'react';
+import { useRef, Fragment, MutableRefObject, cloneElement, ReactNode, ReactElement, FC } from 'react';
 import mergeProps from './mergeProps';
-import { SetOpened, Props, RefObject } from './types';
+import { SetOpened, RefObject } from './types';
 
 interface TooltipParentProps {
     innerRef?: MutableRefObject<HTMLElement | null>;
@@ -18,10 +8,20 @@ interface TooltipParentProps {
         parentRef?: RefObject;
         tooltipRef?: RefObject;
     }) => [{ [propName: string]: any }, { opened: boolean; setOpened: SetOpened }];
-    children?: ReactChildren;
+    children: [
+        (
+            | ((
+                  parentProps: { [propName: string]: any; innerRef?: RefObject },
+                  tooltipProps: { [propName: string]: any; setOpened: SetOpened; opened: boolean }
+              ) => ReactNode)
+            | null
+            | undefined
+        ),
+        ReactElement | null | undefined
+    ];
 }
 
-const TooltipParent: FC<TooltipParentProps> = ({ innerRef = null, tooltip, children = null, ...rest }) => {
+const TooltipParent: FC<TooltipParentProps> = ({ innerRef = null, tooltip, children, ...rest }) => {
     const ref = useRef<HTMLElement | null>(null);
     const parentRef = innerRef || ref;
     const tooltipRef = useRef<HTMLElement | null>(null);
@@ -30,10 +30,7 @@ const TooltipParent: FC<TooltipParentProps> = ({ innerRef = null, tooltip, child
         tooltipRef
     });
     const { opened, ...tooltipRest } = tooltipProps;
-    const [parentElement, tooltipElement] = Children.toArray(children) as [
-        (parentProps: Props, tooltipProps: Props) => ReactNode | null | undefined,
-        ReactElement | null | undefined
-    ];
+    const [parentElement, tooltipElement] = children;
 
     return (
         <Fragment>
