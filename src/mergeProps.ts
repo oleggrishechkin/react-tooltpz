@@ -1,6 +1,16 @@
-const mergeProps = (propsArray = []) => {
-    const result = {};
-    const handlers = {};
+import { Props, AnyFunction } from './types';
+
+interface MergeProps {
+    (propsArray: Array<Props>): Props;
+}
+
+interface Handlers {
+    [propName: string]: Array<AnyFunction>;
+}
+
+const mergeProps: MergeProps = (propsArray = []) => {
+    const result: Props = {};
+    const handlers: Handlers = {};
 
     propsArray.forEach((props) => {
         const propNames = Object.keys(props || {});
@@ -27,11 +37,13 @@ const mergeProps = (propsArray = []) => {
     });
 
     Object.keys(handlers).forEach((handlerName) => {
-        result[handlerName] = (...args) => {
+        const handler: AnyFunction = (...args) => {
             handlers[handlerName].forEach((handler) => {
                 handler(...args);
             });
         };
+
+        result[handlerName] = handler;
     });
 
     return result;

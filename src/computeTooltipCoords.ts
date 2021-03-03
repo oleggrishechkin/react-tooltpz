@@ -1,4 +1,16 @@
-const computePositionCoords = (
+import { Align, Position, SizeObject, Coords, NormalizedRectObject } from './types';
+
+interface ComputeCoordsOptions {
+    margin: number;
+    position: Position;
+    align: Align;
+}
+
+interface ComputeCoords {
+    (parentNormalizedRect: NormalizedRectObject, tooltipSize: SizeObject, options: ComputeCoordsOptions): Coords | null;
+}
+
+const computePositionCoords: ComputeCoords = (
     { top, right, bottom, left, width, height },
     { width: tooltipWidth, height: tooltipHeight },
     { margin, position, align }
@@ -117,7 +129,16 @@ const computePositionCoords = (
     }
 };
 
-const isPositionAllowed = (
+interface IsPositionAllowedOptions {
+    margin: number;
+    position: Position;
+}
+
+interface IsPositionAllowed {
+    (parentNormalizedRect: NormalizedRectObject, tooltipSize: SizeObject, options: IsPositionAllowedOptions): boolean;
+}
+
+const isPositionAllowed: IsPositionAllowed = (
     { top, right, bottom, left },
     { width: tooltipWidth, height: tooltipHeight },
     { margin, position }
@@ -147,7 +168,7 @@ const isPositionAllowed = (
     }
 };
 
-const computeTooltipCoords = (parentNormalizedRect, tooltipSize, { margin, position, align }) => {
+const computeTooltipCoords: ComputeCoords = (parentNormalizedRect, tooltipSize, { margin, position, align }) => {
     const preferredCoords = computePositionCoords(parentNormalizedRect, tooltipSize, { margin, position, align });
 
     switch (position) {

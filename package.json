@@ -1,6 +1,6 @@
 {
   "name": "react-tooltpz",
-  "version": "3.2.0",
+  "version": "4.0.0",
   "description": "Flexible Tooltip Components with zero dependencies",
   "keywords": [
     "react",
@@ -18,22 +18,27 @@
     "url": "https://github.com/oleggrishechkin"
   },
   "files": [
-    "lib/*.js"
+    "lib/*.js",
+    "lib/*.d.ts"
   ],
   "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/oleggrishechkin/react-tooltpz"
   },
   "scripts": {
-    "prepublish": "rimraf lib && babel src -d lib"
+    "prepare": "rimraf lib && tsc"
   },
   "devDependencies": {
-    "@babel/cli": "^7.12.1",
-    "configs-og": "^1.0.0",
+    "@types/react": "^17.0.2",
+    "@types/react-dom": "^17.0.1",
+    "configs-og": "^2.0.15",
+    "csstype": "^3.0.7",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
-    "rimraf": "^3.0.2"
+    "rimraf": "^3.0.2",
+    "typescript": "^4.2.2"
   },
   "peerDependencies": {
     "react": ">=16.8.0",
@@ -52,19 +57,18 @@
     ]
   },
   "eslintConfig": {
-    "extends": "./node_modules/configs-og/.eslintrc.js"
+    "extends": [
+      "./node_modules/configs-og/.eslintrc.js"
+    ]
   },
   "prettier": "configs-og/prettier.config.js",
-  "babel": {
-    "extends": "configs-og/babel.config.js"
-  },
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
     }
   },
   "lint-staged": {
-    "*.(js|jsx)": [
+    "*.(js|jsx|ts|tsx)": [
       "eslint --quiet"
     ]
   }

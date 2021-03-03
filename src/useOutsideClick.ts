@@ -1,17 +1,24 @@
 import { useRef, useEffect, useCallback } from 'react';
 
-const useOutsideClick = (onOutsideClick) => {
+interface UseOutsideClick {
+    (onOutsideClick: EventHandlerNonNull): {
+        onMouseDown: EventHandlerNonNull;
+        onTouchStart: EventHandlerNonNull;
+    };
+}
+
+const useOutsideClick: UseOutsideClick = (onOutsideClick) => {
     const clickedRef = useRef(false);
-    const outsideClickRef = useRef(null);
+    const outsideClickRef = useRef<EventHandlerNonNull>(() => null);
 
     outsideClickRef.current = onOutsideClick;
 
-    const onMouseDown = useCallback(() => {
+    const onMouseDown = useCallback<EventHandlerNonNull>(() => {
         clickedRef.current = true;
     }, []);
 
     useEffect(() => {
-        const onDocumentMouseDown = (event) => {
+        const onDocumentMouseDown: EventHandlerNonNull = (event) => {
             if (clickedRef.current || event.defaultPrevented || !outsideClickRef.current) {
                 clickedRef.current = false;
 

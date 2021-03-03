@@ -1,10 +1,27 @@
-import React, { useMemo, useContext, useRef } from 'react';
-import ReactDOM from 'react-dom';
+import { useMemo, useContext, useRef, FC, ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 import useTooltip from './useTooltip';
 import ZIndexContext from './ZIndexContext';
 import PortalNodeContext from './PortalNodeContext';
+import { Size, RefObject, Style, SetOpened, Position, Align } from './types';
 
-const Tooltip = ({
+interface TooltipProps {
+    innerRef?: RefObject;
+    parentRef: RefObject;
+    zIndex?: number;
+    margin?: number;
+    position?: Position;
+    align?: Align;
+    children?: (
+        parentProps: { [propName: string]: any; innerRef: RefObject; style: Style },
+        additionalData?: { parentSize: Size; tooltipSize: Size; setOpened: SetOpened }
+    ) => ReactNode;
+    style?: Style;
+    setOpened: SetOpened;
+    portalNode?: HTMLElement;
+}
+
+const Tooltip: FC<TooltipProps> = ({
     innerRef = null,
     parentRef,
     zIndex = 0,
@@ -13,17 +30,17 @@ const Tooltip = ({
     align = 'start',
     children = null,
     style = null,
-    setOpened = null,
+    setOpened,
     portalNode = null,
     ...rest
 }) => {
-    const ref = useRef(null);
+    const ref = useRef<HTMLElement | null>(null);
     const tooltipRef = innerRef || ref;
     const [coords, parentSize, tooltipSize] = useTooltip(parentRef, tooltipRef, { margin, position, align });
     const contextZIndex = useContext(ZIndexContext);
     const contextPortalNode = useContext(PortalNodeContext);
     const tooltipZIndex = (zIndex || 0) + (contextZIndex || 0);
-    const tooltipStyle = useMemo(
+    const tooltipStyle = useMemo<Style>(
         () => ({
             ...style,
             position: 'fixed',
@@ -38,7 +55,7 @@ const Tooltip = ({
 
     return (
         <ZIndexContext.Provider value={tooltipZIndex + 1}>
-            {ReactDOM.createPortal(
+            {createPortal(
                 !!children &&
                     children(
                         {

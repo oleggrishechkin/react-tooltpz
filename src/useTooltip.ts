@@ -1,15 +1,22 @@
 import { useState, useRef, useEffect } from 'react';
 import computeTooltipCoords from './computeTooltipCoords';
+import { Coords, Size, Position, Align, RefObject } from './types';
 
-const useTooltip = (
-    parentRef,
-    tooltipRef,
-    { margin = 4, position = 'bottom', align = 'start', positions = null, aligns = null } = {}
-) => {
-    const [coords, setCoords] = useState(null);
-    const [parentSize, setParentSize] = useState(null);
-    const [tooltipSize, setTooltipSize] = useState(null);
-    const stepRef = useRef(null);
+interface UseTooltipOptions {
+    margin?: number;
+    position?: Position;
+    align?: Align;
+}
+
+interface UseTooltip {
+    (parentRef: RefObject, tooltipRef: RefObject, options: UseTooltipOptions): [Coords, Size, Size];
+}
+
+const useTooltip: UseTooltip = (parentRef, tooltipRef, { margin = 4, position = 'bottom', align = 'start' } = {}) => {
+    const [coords, setCoords] = useState<Coords>(null);
+    const [parentSize, setParentSize] = useState<Size>(null);
+    const [tooltipSize, setTooltipSize] = useState<Size>(null);
+    const stepRef = useRef<VoidFunction>(() => null);
 
     stepRef.current = () => {
         if (!parentRef.current || !tooltipRef.current) {
@@ -46,9 +53,7 @@ const useTooltip = (
             {
                 margin,
                 position,
-                align,
-                positions,
-                aligns
+                align
             }
         );
 
@@ -76,7 +81,7 @@ const useTooltip = (
     };
 
     useEffect(() => {
-        let frameId = 0;
+        let frameId: number;
         const frame = () => {
             frameId = requestAnimationFrame(frame);
             stepRef.current();
@@ -84,7 +89,9 @@ const useTooltip = (
 
         frame();
 
-        return () => cancelAnimationFrame(frameId);
+        return () => {
+            cancelAnimationFrame(frameId);
+        };
     }, []);
 
     return [coords, parentSize, tooltipSize];
