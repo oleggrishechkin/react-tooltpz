@@ -1,31 +1,50 @@
 import { useState, useRef, useEffect } from 'react';
 import computeTooltipCoords from './computeTooltipCoords';
-import { Coords, Size, Position, Align, RefObject } from './types';
+import { Coords, Position, Align, RefWithGetBoundingClientRect } from './types';
 
-interface UseTooltipOptions {
-    margin?: number;
-    position?: Position;
-    align?: Align;
-}
+const normalizeRect = (rect: ClientRect): ClientRect => ({
+    top: rect.top + window.pageYOffset,
+    right: rect.right + window.pageXOffset,
+    bottom: rect.bottom + window.pageYOffset,
+    left: rect.left + window.pageXOffset,
+    width: rect.width,
+    height: rect.height
+});
 
-interface UseTooltip {
-    (parentRef: RefObject, tooltipRef: RefObject, options: UseTooltipOptions): [Coords, Size, Size];
-}
+const shallowEqual = <Type extends Record<string, any>>(source?: Type | null, target?: Type | null): boolean => {
+    if (!source || !target) {
+        return false;
+    }
 
-const useTooltip: UseTooltip = (parentRef, tooltipRef, { margin = 4, position = 'bottom', align = 'start' } = {}) => {
-    const [coords, setCoords] = useState<Coords>(null);
-    const [parentSize, setParentSize] = useState<Size>(null);
-    const [tooltipSize, setTooltipSize] = useState<Size>(null);
-    const stepRef = useRef<VoidFunction>(() => null);
+    return Object.keys(source).every((key) => source[key] !== target[key]);
+};
+
+const useTooltip = (
+    parentRef: RefWithGetBoundingClientRect,
+    tooltipRef: RefWithGetBoundingClientRect,
+    {
+        margin = 4,
+        position = 'bottom',
+        align = 'start'
+    }: {
+        margin?: number;
+        position?: Position;
+        align?: Align;
+    } = {}
+): [Coords | null, ClientRect | null, ClientRect | null] => {
+    const [coords, setCoords] = useState<Coords | null>(null);
+    const [parentRect, setParentRect] = useState<ClientRect | null>(null);
+    const [tooltipRect, setTooltipRect] = useState<ClientRect | null>(null);
+    const stepRef = useRef<() => void>(() => {});
 
     stepRef.current = () => {
         if (!parentRef.current || !tooltipRef.current) {
-            if (!parentRef.current && !!parentSize) {
-                setParentSize(null);
+            if (!parentRef.current && !!parentRect) {
+                setParentRect(null);
             }
 
-            if (!tooltipRef.current && !!tooltipSize) {
-                setTooltipSize(null);
+            if (!tooltipRef.current && !!tooltipRect) {
+                setTooltipRect(null);
             }
 
             if (coords) {
@@ -35,54 +54,30 @@ const useTooltip: UseTooltip = (parentRef, tooltipRef, { margin = 4, position = 
             return;
         }
 
-        const parentRefRect = parentRef.current.getBoundingClientRect();
-        const tooltipRefRect = tooltipRef.current.getBoundingClientRect();
-        const nextCoords = computeTooltipCoords(
-            {
-                top: parentRefRect.top + window.pageYOffset,
-                right: parentRefRect.right + window.pageXOffset,
-                bottom: parentRefRect.bottom + window.pageYOffset,
-                left: parentRefRect.left + window.pageXOffset,
-                width: parentRefRect.width,
-                height: parentRefRect.height
-            },
-            {
-                width: tooltipRefRect.width,
-                height: tooltipRefRect.height
-            },
-            {
-                margin,
-                position,
-                align
-            }
-        );
+        const parentNormalizedRect = normalizeRect(parentRef.current.getBoundingClientRect());
+        const tooltipNormalizedRect = normalizeRect(tooltipRef.current.getBoundingClientRect());
+        const nextCoords = computeTooltipCoords(parentNormalizedRect, tooltipNormalizedRect, {
+            margin,
+            position,
+            align
+        });
 
-        if (!parentSize || parentRefRect.width !== parentSize.width || parentRefRect.height !== parentSize.height) {
-            setParentSize({
-                width: parentRefRect.width,
-                height: parentRefRect.height
-            });
+        if (!shallowEqual(parentRect, parentNormalizedRect)) {
+            setParentRect(parentNormalizedRect);
         }
 
-        if (
-            !tooltipSize ||
-            tooltipRefRect.width !== tooltipSize.width ||
-            tooltipRefRect.height !== tooltipSize.height
-        ) {
-            setTooltipSize({
-                width: tooltipRefRect.width,
-                height: tooltipRefRect.height
-            });
+        if (!shallowEqual(tooltipRect, tooltipNormalizedRect)) {
+            setTooltipRect(tooltipNormalizedRect);
         }
 
-        if (!nextCoords || !coords || nextCoords.top !== coords.top || nextCoords.left !== coords.left) {
+        if (!shallowEqual(coords, nextCoords)) {
             setCoords(nextCoords);
         }
     };
 
     useEffect(() => {
-        let frameId: number;
-        const frame = () => {
+        let frameId: any;
+        const frame = (): void => {
             frameId = requestAnimationFrame(frame);
             stepRef.current();
         };
@@ -94,7 +89,7 @@ const useTooltip: UseTooltip = (parentRef, tooltipRef, { margin = 4, position = 
         };
     }, []);
 
-    return [coords, parentSize, tooltipSize];
+    return [coords, parentRect, tooltipRect];
 };
 
 export default useTooltip;

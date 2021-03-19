@@ -1,20 +1,10 @@
-import { Align, Position, SizeObject, Coords, NormalizedRectObject } from './types';
+import { Align, Position, Coords } from './types';
 
-interface ComputeCoordsOptions {
-    margin: number;
-    position: Position;
-    align: Align;
-}
-
-interface ComputeCoords {
-    (parentNormalizedRect: NormalizedRectObject, tooltipSize: SizeObject, options: ComputeCoordsOptions): Coords | null;
-}
-
-const computePositionCoords: ComputeCoords = (
-    { top, right, bottom, left, width, height },
-    { width: tooltipWidth, height: tooltipHeight },
-    { margin, position, align }
-) => {
+const computePositionCoords = (
+    { top, right, bottom, left, width, height }: ClientRect,
+    { width: tooltipWidth, height: tooltipHeight }: ClientRect,
+    { margin, position, align }: { margin: number; position: Position; align: Align }
+): Coords | null => {
     switch (position) {
         case 'bottom': {
             switch (align) {
@@ -129,20 +119,11 @@ const computePositionCoords: ComputeCoords = (
     }
 };
 
-interface IsPositionAllowedOptions {
-    margin: number;
-    position: Position;
-}
-
-interface IsPositionAllowed {
-    (parentNormalizedRect: NormalizedRectObject, tooltipSize: SizeObject, options: IsPositionAllowedOptions): boolean;
-}
-
-const isPositionAllowed: IsPositionAllowed = (
-    { top, right, bottom, left },
-    { width: tooltipWidth, height: tooltipHeight },
-    { margin, position }
-) => {
+const isPositionAllowed = (
+    { top, right, bottom, left }: ClientRect,
+    { width: tooltipWidth, height: tooltipHeight }: ClientRect,
+    { margin, position }: { margin: number; position: Position }
+): boolean => {
     switch (position) {
         case 'bottom': {
             return (
@@ -168,7 +149,11 @@ const isPositionAllowed: IsPositionAllowed = (
     }
 };
 
-const computeTooltipCoords: ComputeCoords = (parentNormalizedRect, tooltipSize, { margin, position, align }) => {
+const computeTooltipCoords = (
+    parentNormalizedRect: ClientRect,
+    tooltipSize: ClientRect,
+    { margin, position, align }: { margin: number; position: Position; align: Align }
+): Coords | null => {
     const preferredCoords = computePositionCoords(parentNormalizedRect, tooltipSize, { margin, position, align });
 
     switch (position) {

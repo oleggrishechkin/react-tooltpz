@@ -1,24 +1,17 @@
 import { useRef, useEffect, useCallback } from 'react';
 
-interface UseOutsideClick {
-    (onOutsideClick: EventHandlerNonNull): {
-        onMouseDown: EventHandlerNonNull;
-        onTouchStart: EventHandlerNonNull;
-    };
-}
-
-const useOutsideClick: UseOutsideClick = (onOutsideClick) => {
-    const clickedRef = useRef(false);
-    const outsideClickRef = useRef<EventHandlerNonNull>(() => null);
+const useOutsideClick = (onOutsideClick: EventHandlerNonNull | null): EventHandlerNonNull => {
+    const clickedRef = useRef<boolean>(false);
+    const outsideClickRef = useRef<EventHandlerNonNull | null>(null);
 
     outsideClickRef.current = onOutsideClick;
 
-    const onMouseDown = useCallback<EventHandlerNonNull>(() => {
+    const onMouseDownOrTouchStart = useCallback<EventHandlerNonNull>(() => {
         clickedRef.current = true;
     }, []);
 
     useEffect(() => {
-        const onDocumentMouseDown: EventHandlerNonNull = (event) => {
+        const onDocumentMouseDownOrTouchStart = (event: Event): void => {
             if (clickedRef.current || event.defaultPrevented || !outsideClickRef.current) {
                 clickedRef.current = false;
 
@@ -26,25 +19,22 @@ const useOutsideClick: UseOutsideClick = (onOutsideClick) => {
             }
 
             setTimeout(() => {
-                if (!clickedRef.current) {
+                if (!clickedRef.current && outsideClickRef.current) {
                     outsideClickRef.current(event);
                 }
             }, 0);
         };
 
-        window.addEventListener('mousedown', onDocumentMouseDown);
-        window.addEventListener('touchstart', onDocumentMouseDown);
+        window.addEventListener('mousedown', onDocumentMouseDownOrTouchStart);
+        window.addEventListener('touchstart', onDocumentMouseDownOrTouchStart);
 
         return () => {
-            window.removeEventListener('mousedown', onDocumentMouseDown);
-            window.removeEventListener('touchstart', onDocumentMouseDown);
+            window.removeEventListener('mousedown', onDocumentMouseDownOrTouchStart);
+            window.removeEventListener('touchstart', onDocumentMouseDownOrTouchStart);
         };
     }, []);
 
-    return {
-        onMouseDown,
-        onTouchStart: onMouseDown
-    };
+    return onMouseDownOrTouchStart;
 };
 
 export default useOutsideClick;

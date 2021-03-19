@@ -4,20 +4,51 @@
 [![NPM total downloads](https://img.shields.io/npm/dt/react-tooltpz.svg?style=flat)](https://npmcharts.com/compare/react-tooltpz?minimal=true)
 [![NPM monthly downloads](https://img.shields.io/npm/dm/react-tooltpz.svg?style=flat)](https://npmcharts.com/compare/react-tooltpz?minimal=true)
 
-Low-level components for creating menus, tooltips, hints, dropdown and other popups
+Low-level component for creating menus, tooltips, hints, dropdown and other popups
 
-## Flexible Tooltip Components with zero dependencies
+## 💬 Flexible Tooltip Components with zero dependencies
 
 - Automatically find best position
-- Hover, Click and Focus logic out of the box
-- Support custom logic
-- Portal to document.body
+- With Portal
 - No extra DOM nodes
-- Lightweight (2.8kb minified+gzipped)
+- Tiny
 
 Try [demo](https://codesandbox.io/s/react-tooltpz-diej4)
 
 ## Getting Started
+
+- ### Basic Usage:
+
+    ```javascript
+    import { useState } from 'react';
+    import { Tooltip } from 'react-tooltpz';
+    
+    const TitleWithHoverTooltip = ({ title, tooltip }) => {
+        const [opened, setOpened] = useState(false);
+        const ref = useRef();
+
+        return (
+            <div
+                ref={ref}
+                onMouseEnter={() => setOpened(true)}
+                onMouseLeave={() => setOpened(false)}
+            >
+                {title}
+                {opened &&
+                    <Tooltip parentRef={ref}>
+                        {({ innerRef, style }) => (
+                            <div ref={innerRef} style={style}>
+                                {tooltip}
+                            </div>
+                        )}
+                    </Tooltip>
+                }
+            </div>
+        )
+    };
+    
+    export default TitleWithHoverTooltip;
+    ```
 
 - ### Installation:
 
@@ -28,138 +59,88 @@ Try [demo](https://codesandbox.io/s/react-tooltpz-diej4)
 - ### Importing:
 
     ```javascript
-    import { TooltipParent, Tooltip, useHoverTooltip } from 'react-tooltpz';
+    import { Tooltip } from 'react-tooltpz';
     ```
     
     You also can import directly what you want 
     
     ```javascript
-    import TooltipParent from 'react-tooltpz/lib/TooltipParent';
     import Tooltip from 'react-tooltpz/lib/Tooltip';
-    import useHoverTooltip from 'react-tooltpz/lib/useHoverTooltip';
+    import useOutsideClick from 'react-tooltpz/lib/useOutsideClick';
     ```
 
-- ### Basic Usage:
+## API
 
-    ```javascript
-    import React from 'react';
-    import { TooltipParent, Tooltip, useHoverTooltip } from 'react-tooltpz';
+### Tooltip
+
+Compute a tooltip coords and render tooltip with `PortalNodeContext` and `ZIndexContext` 
+Prefer this component instead of directly use `useTooltip` hook
+
+**Props**
+
+name          |type                                                                          |default      |description
+--------------|------------------------------------------------------------------------------|-------------|-----------
+**parentRef** |{ current: { getBoundingClientRect } }                                        |required     |Tooltip ref object.<br>It can be any object with `current` prop.<br>`current` prop should be `null` or any object with `getBoundingClientRect` method
+**innerRef**  |{ current: { getBoundingClientRect } }                                        |-            |Tooltip ref object.<br>Similar to **parentRef**
+**zIndex**    |number                                                                        |0            |Tooltip default z-index
+**margin**    |number                                                                        |4            |Margin between parent and tooltip
+**position**  |'bottom' / 'top' / 'left' / 'right'                                           |'bottom'     |Tooltip position
+**align**     |'start' / 'center' / 'end'                                                    |'start'      |Tooltip align
+**children**  |({ innerRef, style }, { parentRect, tooltipRect } ) => ReactNode              |-            |Tooltip render function
+**style**     |object                                                                        |-            |Tooltip style object
+**portalNode**|HTMLElement                                                                   |-            |second parameter for `ReadDOM.createPortal`
+
+---
+
+### Portal
+Create a portal with `PortalNodeContext`. Prefer this component instead of directly use `createPortal`
+
+**Props**
+
+name          |type       |default      |description
+--------------|-----------|-------------|-----------
+**children**  |ReactNode  |-            |first parameter for `ReadDOM.createPortal`
+**portalNode**|HTMLElement|-            |second parameter for `ReadDOM.createPortal`
+
+___
+
+### PortalNodeContext
+
+provide portalNode to `Tooltip` and `Portal`
+
+___
+
+### ZIndexContext
+
+provide zIndex to `Tooltip`
+
+___
+
+### useTooltip
+
+Compute a tooltip coords
+
+Parameters:
+- parentRef: similar to `Tooltip` **parentRef**
+- tooltipRef: similar to `Tooltip` **innerRef**
+- options?: `{ margin?, position?, align? }`
+
+Returns array with:
+
+- coords: `{ top, left } | null`
+- parentRect: `{ top, left, bottom, right, width, height } | null`
+- tooltipRect: `{ top, left, bottom, right, width, height } | null`
+
+### useOutsideClick
     
-    const TitleWithTooltip = ({ title, tooltip }) => (
-        <TooltipParent tooltip={useHoverTooltip}>
-            {({ innerRef, ...rest }) => (
-                <div {...rest} ref={innerRef}>
-                    {title}
-                </div>
-            )}
-            <Tooltip>
-                {({ innerRef, ...rest }) => (
-                    <div {...rest} ref={innerRef}>
-                        {tooltip}
-                    </div>
-                )}
-            </Tooltip>
-        </TooltipParent>
-    );
-    
-    export default TitleWithTooltip;
-    ```
+Handle a click outside of element with portal support
 
-## Components
+```javascript
+const onMouseDownOrTouchStart = useOutsideClick(onOutsideClick);
+```
 
-- ### TooltipParent
+Parameters:
+- onOutsideClick?: `(event): void` - "onOutsideClick" handler
 
-    **Props**
-    
-    name             |type                                                                 |default |description
-    -----------------|---------------------------------------------------------------------|--------|-----------
-    **innerRef**     |object                                                               |null    |Parent `ref` object
-    **tooltip**      |function (react hook)                                                |required|Tooltip `opened` logic
-    **children**     |({ innerRef, ...rest }, { opened, setOpened, ...tooltipRest }) => jsx|required|Parent render function
-
-- ### Tooltip
-
-    **Props**
-    
-    name          |type                                                                          |default      |description
-    --------------|------------------------------------------------------------------------------|-------------|-----------
-    **innerRef**  |object                                                                        |null         |Tooltip `ref` object
-    **parentRef** |object                                                                        |null         |Parent `ref` object
-    **zIndex**    |number                                                                        |0            |Tooltip default `z-index`
-    **margin**    |number                                                                        |4            |Margin between parent and tooltip
-    **position**  |one of [_bottom_, _top_, _left_, _right_]                                     |_bottom_     |Tooltip position
-    **align**     |one of [_start_, _center_, _end_]                                             |_start_      |Tooltip align
-    **children**  |({ innerRef, style, ...rest }, { parentSize, tooltipSize, setOpened } ) => jsx|null         |Tooltip render function
-    **style**     |object                                                                        |null         |Tooltip `style`
-    **setOpened** |(opened) => void                                                              |null         |Tooltip `opened` change function
-    **portalNode**|DOM node                                                                      |document.body|Container for `ReadDOM.createPortal`
-
-## Logic hooks
-
-- ### useHoverTooltip
-
-    open tooltip by a mouse enter and close by mouse leave
-
-- ### useClickTooltip
-
-    open tooltip by a click and close by a click and outside click
-
-- ### useFocusTooltip
-
-    open tooltip by focus and close by blur
-
-## Contexts
-
-- ### PortalNodeContext
-
-    provide portalNode to all tooltips
-
-- ### ZIndexContext
-
-    provide zIndex to all tooltips
-
-## Helpers
-
-- ### useOutsideClick
-    
-    track click outside element with portal support
-
-    ```javascript
-    const { onMouseDown, onTouchStart } = useOutsideClick(onOutsideClick);
-    ```
-
-    Accepts: `function`
-  
-    Returns: `object` with `onMouseDown` and `onTouchStart` props, you should set this event handlers on target element
-
-## Write your own logic hook
-
-- ### API
-
-    ```javascript
-    const [
-        parentProps,
-        { opened, setOpened, ...tooltipProps }
-    ] = useMyOwnLogicHook({ parentRef, tooltipRef });
-    ```
-    
-    Accepts: `object` with `parentRef` and `tooltipRef` props
-    
-    Returns: `array` with `parentProps` and `tooltipProps` items
-    
-    *`tooltipProps` required `opened` and `setOpened` props
-
-- ### Usage
-
-    ```javascript
-    const useSimpleClickTooltip = () => {
-        const [opened, setOpened] = useState(false);
-        const onClick = useCallback(() => {
-            setOpened((value) => !value);
-        });
-    
-        return [{ onClick }, { opened, setOpened }];
-    };
-    ```
-    
-    *You should use `useCallback`, `useMemo` and `useRef` hooks to prevent unnecessary re renders
+Returns:
+- onMouseDownOrTouchStart: `(event): void` - onMouseDown or onTouchStart handler

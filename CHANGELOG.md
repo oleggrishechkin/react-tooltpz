@@ -1,3 +1,22 @@
+# 5.0.0 (18 March 2021)
+
+**WARNING!** This version contains big breaking changes
+
+## Breaking
+
+- Remove
+    - `useClickTooltip`, `useFocusTooltip`, `useHoverTooltip`
+    - `TooltipParent`
+    - `mergeProps`
+- Remove exports
+    - `computeTooltipCoords`
+- Rewrite some types
+- Change `useOutsideClick`
+    - return value changed from `{ onMouseDown, onTouchStart }` to `onMouseDownOrTouchStart`
+- Change `Tooltip`
+    - `...rest` don't forward to first `children` callback parameter
+    - second `children` callback parameter is `{ parentRect, tooltipRect}` instead of `{ parentSize, tooltipSize, setOpened }`
+
 # 4.0.0 (03 March 2021)
 
 ## Breaking
