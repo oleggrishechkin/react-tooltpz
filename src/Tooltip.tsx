@@ -1,4 +1,4 @@
-import { useMemo, useContext, useRef, ReactNode } from 'react';
+import { useMemo, useContext, useRef, ReactNode, ReactElement } from 'react';
 import useTooltip from './useTooltip';
 import ZIndexContext from './ZIndexContext';
 import { RefWithGetBoundingClientRect, ObjectWithGetBoundingClientRect, Style, Position, Align } from './types';
@@ -29,9 +29,9 @@ const Tooltip = ({
     children,
     style,
     portalNode
-}: TooltipProps): ReactNode => {
+}: TooltipProps): ReactElement | ReactNode => {
     const contextZIndex = useContext(ZIndexContext);
-    const ref = useRef<ObjectWithGetBoundingClientRect | null>(null);
+    const ref = useRef<ObjectWithGetBoundingClientRect>(null);
     const tooltipRef = innerRef || ref;
     const [coords, parentRect, tooltipRect] = useTooltip(parentRef, tooltipRef, { margin, position, align });
     const tooltipZIndex = (zIndex || 0) + (contextZIndex || 0);
