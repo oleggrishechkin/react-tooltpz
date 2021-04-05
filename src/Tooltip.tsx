@@ -1,4 +1,4 @@
-import { useMemo, useContext, useRef, ReactNode, ReactElement } from 'react';
+import { Fragment, useMemo, useContext, useRef, ReactNode, ReactElement } from 'react';
 import useTooltip from './useTooltip';
 import ZIndexContext from './ZIndexContext';
 import { RefWithGetBoundingClientRect, ObjectWithGetBoundingClientRect, Style, Position, Align } from './types';
@@ -29,7 +29,7 @@ const Tooltip = ({
     children,
     style,
     portalNode
-}: TooltipProps): ReactElement | ReactNode => {
+}: TooltipProps): ReactElement => {
     const contextZIndex = useContext(ZIndexContext);
     const ref = useRef<ObjectWithGetBoundingClientRect>(null);
     const tooltipRef = innerRef || ref;
@@ -49,19 +49,21 @@ const Tooltip = ({
     );
 
     return (
-        typeof children === 'function' && (
-            <ZIndexContext.Provider value={tooltipZIndex + 1}>
-                <Portal portalNode={portalNode}>
-                    {children(
-                        {
-                            innerRef: tooltipRef,
-                            style: tooltipStyle
-                        },
-                        { parentRect, tooltipRect }
-                    )}
-                </Portal>
-            </ZIndexContext.Provider>
-        )
+        <Fragment>
+            {typeof children === 'function' && (
+                <ZIndexContext.Provider value={tooltipZIndex + 1}>
+                    <Portal portalNode={portalNode}>
+                        {children(
+                            {
+                                innerRef: tooltipRef,
+                                style: tooltipStyle
+                            },
+                            { parentRect, tooltipRect }
+                        )}
+                    </Portal>
+                </ZIndexContext.Provider>
+            )}
+        </Fragment>
     );
 };
 
