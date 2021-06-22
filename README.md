@@ -13,7 +13,7 @@ Low-level component for creating menus, tooltips, hints, dropdown and other popu
 - No extra DOM nodes
 - Tiny
 
-Try [demo](https://codesandbox.io/s/react-tooltpz-diej4)
+Try [demo](https://codesandbox.io/s/react-tooltpz-q5dvz)
 
 ## Getting Started
 
