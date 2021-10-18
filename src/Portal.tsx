@@ -13,4 +13,5 @@ const Portal = ({ children, portalNode }: PortalProps): ReactElement => {
     return createPortal(children || null, portalNode || contextPortalNode);
 };
 
+// eslint-disable-next-line import/no-default-export
 export default Portal;

@@ -1,8 +1,8 @@
-import { Align, Position, Coords } from './types';
+import { Align, Position, Coords, Rect } from './types';
 
 const computePositionCoords = (
-    { top, right, bottom, left, width, height }: ClientRect,
-    { width: tooltipWidth, height: tooltipHeight }: ClientRect,
+    { top, right, bottom, left, width, height }: Rect,
+    { width: tooltipWidth, height: tooltipHeight }: Rect,
     { margin, position, align }: { margin: number; position: Position; align: Align }
 ): Coords | null => {
     switch (position) {
@@ -120,8 +120,8 @@ const computePositionCoords = (
 };
 
 const isPositionAllowed = (
-    { top, right, bottom, left }: ClientRect,
-    { width: tooltipWidth, height: tooltipHeight }: ClientRect,
+    { top, right, bottom, left }: Rect,
+    { width: tooltipWidth, height: tooltipHeight }: Rect,
     { margin, position }: { margin: number; position: Position }
 ): boolean => {
     switch (position) {
@@ -150,8 +150,8 @@ const isPositionAllowed = (
 };
 
 const computeTooltipCoords = (
-    parentNormalizedRect: ClientRect,
-    tooltipSize: ClientRect,
+    parentNormalizedRect: Rect,
+    tooltipSize: Rect,
     { margin, position, align }: { margin: number; position: Position; align: Align }
 ): Coords | null => {
     const preferredCoords = computePositionCoords(parentNormalizedRect, tooltipSize, { margin, position, align });
@@ -247,4 +247,5 @@ const computeTooltipCoords = (
     }
 };
 
+// eslint-disable-next-line import/no-default-export
 export default computeTooltipCoords;

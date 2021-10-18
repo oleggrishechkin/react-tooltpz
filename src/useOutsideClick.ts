@@ -1,17 +1,17 @@
 import { useRef, useEffect, useCallback } from 'react';
 
-const useOutsideClick = (onOutsideClick: EventHandlerNonNull | null): EventHandlerNonNull => {
+const useOutsideClick = (onOutsideClick: EventListener): ((...args: any[]) => void) => {
     const clickedRef = useRef<boolean>(false);
-    const outsideClickRef = useRef<EventHandlerNonNull | null>(null);
+    const outsideClickRef = useRef<((evt: Event) => void) | null>(null);
 
     outsideClickRef.current = onOutsideClick;
 
-    const onMouseDownOrTouchStart = useCallback<EventHandlerNonNull>(() => {
+    const onMouseDownOrTouchStart = useCallback<(...args: any[]) => void>(() => {
         clickedRef.current = true;
     }, []);
 
     useEffect(() => {
-        const onDocumentMouseDownOrTouchStart = (event: Event): void => {
+        const onDocumentMouseDownOrTouchStart: EventListener = (event): void => {
             if (clickedRef.current || event.defaultPrevented || !outsideClickRef.current) {
                 clickedRef.current = false;
 
@@ -37,4 +37,5 @@ const useOutsideClick = (onOutsideClick: EventHandlerNonNull | null): EventHandl
     return onMouseDownOrTouchStart;
 };
 
+// eslint-disable-next-line import/no-default-export
 export default useOutsideClick;

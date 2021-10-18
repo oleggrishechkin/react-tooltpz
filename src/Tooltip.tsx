@@ -1,7 +1,7 @@
-import { Fragment, useMemo, useContext, useRef, ReactNode, ReactElement } from 'react';
+import { Fragment, useMemo, useContext, useRef, ReactNode, ReactElement, CSSProperties } from 'react';
 import useTooltip from './useTooltip';
 import ZIndexContext from './ZIndexContext';
-import { RefWithGetBoundingClientRect, ObjectWithGetBoundingClientRect, Style, Position, Align } from './types';
+import { RefWithGetBoundingClientRect, ObjectWithGetBoundingClientRect, Position, Align, Rect } from './types';
 import Portal from './Portal';
 
 interface TooltipProps {
@@ -12,10 +12,10 @@ interface TooltipProps {
     position?: Position;
     align?: Align;
     children?: (
-        props: { innerRef: RefWithGetBoundingClientRect; style: Style },
-        additionalData?: { parentRect: ClientRect | null; tooltipRect: ClientRect | null }
+        props: { innerRef: RefWithGetBoundingClientRect; style: CSSProperties },
+        additionalData?: { parentRect: Rect | null; tooltipRect: Rect | null }
     ) => ReactNode;
-    style?: Style;
+    style?: CSSProperties;
     portalNode?: HTMLElement;
 }
 
@@ -35,7 +35,7 @@ const Tooltip = ({
     const tooltipRef = innerRef || ref;
     const [coords, parentRect, tooltipRect] = useTooltip(parentRef, tooltipRef, { margin, position, align });
     const tooltipZIndex = (zIndex || 0) + (contextZIndex || 0);
-    const tooltipStyle = useMemo<Style>(
+    const tooltipStyle = useMemo<CSSProperties>(
         () => ({
             ...style,
             position: 'fixed',
@@ -67,4 +67,5 @@ const Tooltip = ({
     );
 };
 
+// eslint-disable-next-line import/no-default-export
 export default Tooltip;

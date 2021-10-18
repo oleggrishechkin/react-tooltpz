@@ -1,8 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import computeTooltipCoords from './computeTooltipCoords';
-import { Coords, Position, Align, RefWithGetBoundingClientRect } from './types';
+import { Coords, Position, Align, RefWithGetBoundingClientRect, Rect } from './types';
 
-const normalizeRect = (rect: ClientRect): ClientRect => ({
+const normalizeRect = (rect: Rect): Rect => ({
     top: rect.top + window.pageYOffset,
     right: rect.right + window.pageXOffset,
     bottom: rect.bottom + window.pageYOffset,
@@ -31,10 +31,10 @@ const useTooltip = (
         position?: Position;
         align?: Align;
     } = {}
-): [Coords | null, ClientRect | null, ClientRect | null] => {
+): [Coords | null, Rect | null, Rect | null] => {
     const [coords, setCoords] = useState<Coords | null>(null);
-    const [parentRect, setParentRect] = useState<ClientRect | null>(null);
-    const [tooltipRect, setTooltipRect] = useState<ClientRect | null>(null);
+    const [parentRect, setParentRect] = useState<Rect | null>(null);
+    const [tooltipRect, setTooltipRect] = useState<Rect | null>(null);
     const stepRef = useRef<() => void>(() => {});
 
     stepRef.current = () => {
@@ -92,4 +92,5 @@ const useTooltip = (
     return [coords, parentRect, tooltipRect];
 };
 
+// eslint-disable-next-line import/no-default-export
 export default useTooltip;
