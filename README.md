@@ -9,62 +9,69 @@ Low-level component for creating menus, tooltips, hints, dropdown and other popu
 
 ## 💬 Flexible Tooltip Components with zero dependencies
 
--   Automatically find best position
--   With Portal
--   No extra DOM nodes
--   Tiny
+- Automatically find best position
+- With Portal
+- No extra DOM nodes
+- Tiny
 
 Try [demo](https://codesandbox.io/s/react-tooltpz-q5dvz)
 
 ## Getting Started
 
--   ### Basic Usage:
+- ### Basic Usage:
 
-    ```javascript
-    import { useState } from 'react';
-    import { Tooltip } from 'react-tooltpz';
+  ```javascript
+  import { useState } from 'react';
+  import { Tooltip } from 'react-tooltpz';
 
-    const TitleWithHoverTooltip = ({ title, tooltip }) => {
-        const [opened, setOpened] = useState(false);
-        const ref = useRef();
+  const TitleWithHoverTooltip = ({
+    title,
+    tooltip,
+  }) => {
+    const [opened, setOpened] = useState(false);
+    const ref = useRef();
 
-        return (
-            <div ref={ref} onMouseEnter={() => setOpened(true)} onMouseLeave={() => setOpened(false)}>
-                {title}
-                {opened && (
-                    <Tooltip parentRef={ref}>
-                        {({ innerRef, style }) => (
-                            <div ref={innerRef} style={style}>
-                                {tooltip}
-                            </div>
-                        )}
-                    </Tooltip>
-                )}
-            </div>
-        );
-    };
+    return (
+      <div
+        ref={ref}
+        onMouseEnter={() => setOpened(true)}
+        onMouseLeave={() => setOpened(false)}
+      >
+        {title}
+        {opened && (
+          <Tooltip parentRef={ref}>
+            {({ innerRef, style }) => (
+              <div ref={innerRef} style={style}>
+                {tooltip}
+              </div>
+            )}
+          </Tooltip>
+        )}
+      </div>
+    );
+  };
 
-    export default TitleWithHoverTooltip;
-    ```
+  export default TitleWithHoverTooltip;
+  ```
 
--   ### Installation:
+- ### Installation:
 
-    ```shell script
-    npm install --save react-tooltpz
-    ```
+  ```shell script
+  npm install --save react-tooltpz
+  ```
 
--   ### Importing:
+- ### Importing:
 
-    ```javascript
-    import { Tooltip } from 'react-tooltpz';
-    ```
+  ```javascript
+  import { Tooltip } from 'react-tooltpz';
+  ```
 
-    You also can import directly what you want
+  You also can import directly what you want
 
-    ```javascript
-    import Tooltip from 'react-tooltpz/lib/Tooltip';
-    import useOutsideClick from 'react-tooltpz/lib/useOutsideClick';
-    ```
+  ```javascript
+  import Tooltip from 'react-tooltpz/lib/Tooltip';
+  import useOutsideClick from 'react-tooltpz/lib/useOutsideClick';
+  ```
 
 ## API
 
@@ -120,28 +127,30 @@ Compute a tooltip coords
 
 Parameters:
 
--   parentRef: similar to `Tooltip` **parentRef**
--   tooltipRef: similar to `Tooltip` **innerRef**
--   options?: `{ margin?, position?, align? }`
+- parentRef: similar to `Tooltip` **parentRef**
+- tooltipRef: similar to `Tooltip` **innerRef**
+- options?: `{ margin?, position?, align? }`
 
 Returns array with:
 
--   coords: `{ top, left } | null`
--   parentRect: `{ top, left, bottom, right, width, height } | null`
--   tooltipRect: `{ top, left, bottom, right, width, height } | null`
+- coords: `{ top, left } | null`
+- parentRect: `{ top, left, bottom, right, width, height } | null`
+- tooltipRect: `{ top, left, bottom, right, width, height } | null`
 
 ### useOutsideClick
 
 Handle a click outside of element with portal support
 
 ```javascript
-const onMouseDownOrTouchStart = useOutsideClick(onOutsideClick);
+const onMouseDownOrTouchStart = useOutsideClick(
+  onOutsideClick,
+);
 ```
 
 Parameters:
 
--   onOutsideClick?: `(event): void` - "onOutsideClick" handler
+- onOutsideClick?: `(event): void` - "onOutsideClick" handler
 
 Returns:
 
--   onMouseDownOrTouchStart: `(event): void` - onMouseDown or onTouchStart handler
+- onMouseDownOrTouchStart: `(event): void` - onMouseDown or onTouchStart handler

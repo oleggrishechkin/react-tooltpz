@@ -13,7 +13,7 @@ interface TooltipProps {
     align?: Align;
     children?: (
         props: { innerRef: RefWithGetBoundingClientRect; style: CSSProperties },
-        additionalData?: { parentRect: Rect | null; tooltipRect: Rect | null }
+        additionalData?: { parentRect: Rect | null; tooltipRect: Rect | null },
     ) => ReactNode;
     style?: CSSProperties;
     portalNode?: HTMLElement;
@@ -28,7 +28,7 @@ const Tooltip = ({
     align = 'start',
     children,
     style,
-    portalNode
+    portalNode,
 }: TooltipProps): ReactElement => {
     const contextZIndex = useContext(ZIndexContext);
     const ref = useRef<ObjectWithGetBoundingClientRect>(null);
@@ -43,9 +43,9 @@ const Tooltip = ({
             top: 0,
             left: 0,
             ...(coords ? {} : { opacity: 0 }),
-            ...coords
+            ...coords,
         }),
-        [coords, style, tooltipZIndex]
+        [coords, style, tooltipZIndex],
     );
 
     return (
@@ -56,9 +56,9 @@ const Tooltip = ({
                         {children(
                             {
                                 innerRef: tooltipRef,
-                                style: tooltipStyle
+                                style: tooltipStyle,
                             },
-                            { parentRect, tooltipRect }
+                            { parentRect, tooltipRect },
                         )}
                     </Portal>
                 </ZIndexContext.Provider>

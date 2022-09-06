@@ -3,7 +3,7 @@ import { Align, Position, Coords, Rect } from './types';
 const computePositionCoords = (
     { top, right, bottom, left, width, height }: Rect,
     { width: tooltipWidth, height: tooltipHeight }: Rect,
-    { margin, position, align }: { margin: number; position: Position; align: Align }
+    { margin, position, align }: { margin: number; position: Position; align: Align },
 ): Coords | null => {
     switch (position) {
         case 'bottom': {
@@ -11,23 +11,23 @@ const computePositionCoords = (
                 case 'start':
                     return {
                         top: bottom + margin,
-                        left: Math.min(Math.max(left, 0), document.documentElement.clientWidth - tooltipWidth)
+                        left: Math.min(Math.max(left, 0), document.documentElement.clientWidth - tooltipWidth),
                     };
                 case 'center':
                     return {
                         top: bottom + margin,
                         left: Math.min(
                             Math.max(left + Math.round(width / 2) - Math.round(tooltipWidth / 2), 0),
-                            document.documentElement.clientWidth - tooltipWidth
-                        )
+                            document.documentElement.clientWidth - tooltipWidth,
+                        ),
                     };
                 case 'end':
                     return {
                         top: bottom + margin,
                         left: Math.min(
                             Math.max(right - tooltipWidth, 0),
-                            document.documentElement.clientWidth - tooltipWidth
-                        )
+                            document.documentElement.clientWidth - tooltipWidth,
+                        ),
                     };
                 default:
                     return null;
@@ -38,23 +38,23 @@ const computePositionCoords = (
                 case 'start':
                     return {
                         top: top - margin - tooltipHeight,
-                        left: Math.min(Math.max(left, 0), document.documentElement.clientWidth - tooltipWidth)
+                        left: Math.min(Math.max(left, 0), document.documentElement.clientWidth - tooltipWidth),
                     };
                 case 'center':
                     return {
                         top: top - margin - tooltipHeight,
                         left: Math.min(
                             Math.max(left + Math.round(width / 2) - Math.round(tooltipWidth / 2), 0),
-                            document.documentElement.clientWidth - tooltipWidth
-                        )
+                            document.documentElement.clientWidth - tooltipWidth,
+                        ),
                     };
                 case 'end':
                     return {
                         top: top - margin - tooltipHeight,
                         left: Math.min(
                             Math.max(right - tooltipWidth, 0),
-                            document.documentElement.clientWidth - tooltipWidth
-                        )
+                            document.documentElement.clientWidth - tooltipWidth,
+                        ),
                     };
                 default:
                     return null;
@@ -65,23 +65,23 @@ const computePositionCoords = (
                 case 'start':
                     return {
                         top: Math.min(Math.max(top, 0), document.documentElement.clientHeight - tooltipHeight),
-                        left: right + margin
+                        left: right + margin,
                     };
                 case 'center':
                     return {
                         top: Math.min(
                             Math.max(top + Math.round(height / 2) - Math.round(tooltipHeight / 2), 0),
-                            document.documentElement.clientHeight - tooltipHeight
+                            document.documentElement.clientHeight - tooltipHeight,
                         ),
-                        left: right + margin
+                        left: right + margin,
                     };
                 case 'end':
                     return {
                         top: Math.min(
                             Math.max(bottom - tooltipHeight, 0),
-                            document.documentElement.clientHeight - tooltipHeight
+                            document.documentElement.clientHeight - tooltipHeight,
                         ),
-                        left: right + margin
+                        left: right + margin,
                     };
                 default:
                     return null;
@@ -92,23 +92,23 @@ const computePositionCoords = (
                 case 'start':
                     return {
                         top: Math.min(Math.max(top, 0), document.documentElement.clientHeight - tooltipHeight),
-                        left: left - margin - tooltipWidth
+                        left: left - margin - tooltipWidth,
                     };
                 case 'center':
                     return {
                         top: Math.min(
                             Math.max(top + Math.round(height / 2) - Math.round(tooltipHeight / 2), 0),
-                            document.documentElement.clientHeight - tooltipHeight
+                            document.documentElement.clientHeight - tooltipHeight,
                         ),
-                        left: left - margin - tooltipWidth
+                        left: left - margin - tooltipWidth,
                     };
                 case 'end':
                     return {
                         top: Math.min(
                             Math.max(bottom - tooltipHeight, 0),
-                            document.documentElement.clientHeight - tooltipHeight
+                            document.documentElement.clientHeight - tooltipHeight,
                         ),
-                        left: left - margin - tooltipWidth
+                        left: left - margin - tooltipWidth,
                     };
                 default:
                     return null;
@@ -122,7 +122,7 @@ const computePositionCoords = (
 const isPositionAllowed = (
     { top, right, bottom, left }: Rect,
     { width: tooltipWidth, height: tooltipHeight }: Rect,
-    { margin, position }: { margin: number; position: Position }
+    { margin, position }: { margin: number; position: Position },
 ): boolean => {
     switch (position) {
         case 'bottom': {
@@ -152,7 +152,7 @@ const isPositionAllowed = (
 const computeTooltipCoords = (
     parentNormalizedRect: Rect,
     tooltipSize: Rect,
-    { margin, position, align }: { margin: number; position: Position; align: Align }
+    { margin, position, align }: { margin: number; position: Position; align: Align },
 ): Coords | null => {
     const preferredCoords = computePositionCoords(parentNormalizedRect, tooltipSize, { margin, position, align });
 
@@ -167,13 +167,13 @@ const computeTooltipCoords = (
                     computePositionCoords(parentNormalizedRect, tooltipSize, {
                         margin,
                         position: 'right',
-                        align: 'start'
+                        align: 'start',
                     })) ||
                 (isPositionAllowed(parentNormalizedRect, tooltipSize, { margin, position: 'left' }) &&
                     computePositionCoords(parentNormalizedRect, tooltipSize, {
                         margin,
                         position: 'left',
-                        align: 'start'
+                        align: 'start',
                     })) ||
                 preferredCoords
             );
@@ -188,13 +188,13 @@ const computeTooltipCoords = (
                     computePositionCoords(parentNormalizedRect, tooltipSize, {
                         margin,
                         position: 'right',
-                        align: 'end'
+                        align: 'end',
                     })) ||
                 (isPositionAllowed(parentNormalizedRect, tooltipSize, { margin, position: 'left' }) &&
                     computePositionCoords(parentNormalizedRect, tooltipSize, {
                         margin,
                         position: 'left',
-                        align: 'end'
+                        align: 'end',
                     })) ||
                 preferredCoords
             );
@@ -209,13 +209,13 @@ const computeTooltipCoords = (
                     computePositionCoords(parentNormalizedRect, tooltipSize, {
                         margin,
                         position: 'bottom',
-                        align: 'start'
+                        align: 'start',
                     })) ||
                 (isPositionAllowed(parentNormalizedRect, tooltipSize, { margin, position: 'top' }) &&
                     computePositionCoords(parentNormalizedRect, tooltipSize, {
                         margin,
                         position: 'top',
-                        align: 'start'
+                        align: 'start',
                     })) ||
                 preferredCoords
             );
@@ -230,13 +230,13 @@ const computeTooltipCoords = (
                     computePositionCoords(parentNormalizedRect, tooltipSize, {
                         margin,
                         position: 'bottom',
-                        align: 'end'
+                        align: 'end',
                     })) ||
                 (isPositionAllowed(parentNormalizedRect, tooltipSize, { margin, position: 'top' }) &&
                     computePositionCoords(parentNormalizedRect, tooltipSize, {
                         margin,
                         position: 'top',
-                        align: 'end'
+                        align: 'end',
                     })) ||
                 preferredCoords
             );

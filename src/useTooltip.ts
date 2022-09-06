@@ -8,7 +8,7 @@ const normalizeRect = (rect: Rect): Rect => ({
     bottom: rect.bottom + window.pageYOffset,
     left: rect.left + window.pageXOffset,
     width: rect.width,
-    height: rect.height
+    height: rect.height,
 });
 
 const shallowEqual = <Type extends Record<string, any>>(source?: Type | null, target?: Type | null): boolean => {
@@ -25,12 +25,12 @@ const useTooltip = (
     {
         margin = 4,
         position = 'bottom',
-        align = 'start'
+        align = 'start',
     }: {
         margin?: number;
         position?: Position;
         align?: Align;
-    } = {}
+    } = {},
 ): [Coords | null, Rect | null, Rect | null] => {
     const [coords, setCoords] = useState<Coords | null>(null);
     const [parentRect, setParentRect] = useState<Rect | null>(null);
@@ -59,7 +59,7 @@ const useTooltip = (
         const nextCoords = computeTooltipCoords(parentNormalizedRect, tooltipNormalizedRect, {
             margin,
             position,
-            align
+            align,
         });
 
         if (!shallowEqual(parentRect, parentNormalizedRect)) {
