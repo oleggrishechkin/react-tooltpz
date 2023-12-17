@@ -68,7 +68,7 @@ export const Tooltip = ({
 
     return (
         <>
-            {children && portalNode && (
+            {children && tooltipPortalNode && (
                 <ZIndexContext.Provider value={tooltipZIndex + 1}>
                     <PortalNodeContext.Provider value={tooltipPortalNode}>
                         {createPortal(
@@ -79,7 +79,7 @@ export const Tooltip = ({
                                 },
                                 { parentRect, tooltipRect },
                             ),
-                            portalNode,
+                            tooltipPortalNode,
                         )}
                     </PortalNodeContext.Provider>
                 </ZIndexContext.Provider>
