@@ -1,6 +1,3 @@
 import { createContext } from 'react';
 
-const PortalNodeContext = createContext<HTMLElement>(document.body);
-
-// eslint-disable-next-line import/no-default-export
-export default PortalNodeContext;
+export const PortalNodeContext = createContext(typeof document === 'undefined' ? null : document.body);

@@ -1,39 +1,57 @@
-import { Fragment, useMemo, useContext, useRef, ReactNode, ReactElement, CSSProperties } from 'react';
-import useTooltip from './useTooltip';
-import ZIndexContext from './ZIndexContext';
-import { RefWithGetBoundingClientRect, ObjectWithGetBoundingClientRect, Position, Align, Rect } from './types';
-import Portal from './Portal';
+import { useMemo, useContext, useRef, ReactNode, ReactElement, CSSProperties, MutableRefObject } from 'react';
+import { createPortal } from 'react-dom';
+import { useTooltipCoords } from './useTooltipCoords';
+import { ZIndexContext } from './ZIndexContext';
+import { AnyWithGetBoundingClientRect, Position, Align, Rect } from './types';
+import { PortalNodeContext } from './PortalNodeContext';
 
-interface TooltipProps {
-    parentRef: RefWithGetBoundingClientRect;
-    innerRef?: RefWithGetBoundingClientRect;
-    zIndex?: number;
+type Props = {
+    parentRef: MutableRefObject<AnyWithGetBoundingClientRect | null>;
+    innerRef?: MutableRefObject<AnyWithGetBoundingClientRect | null>;
     margin?: number;
     position?: Position;
     align?: Align;
+    allowedPositions?: Position[];
     children?: (
-        props: { innerRef: RefWithGetBoundingClientRect; style: CSSProperties },
+        props: { ref: MutableRefObject<AnyWithGetBoundingClientRect | null>; style: CSSProperties },
         additionalData?: { parentRect: Rect | null; tooltipRect: Rect | null },
     ) => ReactNode;
     style?: CSSProperties;
+    zIndex?: number;
     portalNode?: HTMLElement;
-}
+    withParentRect?: boolean;
+    withTooltipRect?: boolean;
+};
 
-const Tooltip = ({
+export const Tooltip = ({
     parentRef,
     innerRef,
-    zIndex = 0,
     margin = 4,
     position = 'bottom',
     align = 'start',
+    allowedPositions,
     children,
     style,
+    zIndex = 0,
     portalNode,
-}: TooltipProps): ReactElement => {
+    withParentRect,
+    withTooltipRect,
+}: Props): ReactElement => {
     const contextZIndex = useContext(ZIndexContext);
-    const ref = useRef<ObjectWithGetBoundingClientRect>(null);
+    const contextPortalNode = useContext(PortalNodeContext);
+    const ref = useRef<AnyWithGetBoundingClientRect | null>(null);
     const tooltipRef = innerRef || ref;
-    const [coords, parentRect, tooltipRect] = useTooltip(parentRef, tooltipRef, { margin, position, align });
+    const { coords, parentRect, tooltipRect } = useTooltipCoords({
+        parentRef,
+        tooltipRef,
+        margin,
+        position,
+        align,
+        allowedPositions,
+        withParentRect,
+        withTooltipRect,
+    });
+    const tooltipPortalNode = portalNode || contextPortalNode;
     const tooltipZIndex = (zIndex || 0) + (contextZIndex || 0);
     const tooltipStyle = useMemo<CSSProperties>(
         () => ({
@@ -49,23 +67,23 @@ const Tooltip = ({
     );
 
     return (
-        <Fragment>
-            {typeof children === 'function' && (
+        <>
+            {children && portalNode && (
                 <ZIndexContext.Provider value={tooltipZIndex + 1}>
-                    <Portal portalNode={portalNode}>
-                        {children(
-                            {
-                                innerRef: tooltipRef,
-                                style: tooltipStyle,
-                            },
-                            { parentRect, tooltipRect },
+                    <PortalNodeContext.Provider value={tooltipPortalNode}>
+                        {createPortal(
+                            children(
+                                {
+                                    ref: tooltipRef,
+                                    style: tooltipStyle,
+                                },
+                                { parentRect, tooltipRect },
+                            ),
+                            portalNode,
                         )}
-                    </Portal>
+                    </PortalNodeContext.Provider>
                 </ZIndexContext.Provider>
             )}
-        </Fragment>
+        </>
     );
 };
-
-// eslint-disable-next-line import/no-default-export
-export default Tooltip;
